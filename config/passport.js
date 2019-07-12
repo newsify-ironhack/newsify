@@ -58,6 +58,8 @@ module.exports = function(passport) {
         passwordField: 'password',
         passReqToCallback: true
     }, async function(req, username, password, done) {
+        const { email } = req.body;
+
         try {
             const userDB = await User.findOne({$or: [{email}, {username}]}).exec()
 
