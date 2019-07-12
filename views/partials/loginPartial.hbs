@@ -1,19 +1,20 @@
 <div class="modal-content">
-      <h1 class="center-align">Log in</h1>
-      <form action="/login" method="POST">
-      <label>Username or Email</label>
-      <input name="name" type="text">
-      <label>Password</label>
-      <input name="password" type="text">
-      <br><br>
-      <h5>Or Log in with LinkedIn</h5>
-      <div class="linkedin-margin">
+  <h1 class="center-align">Log in</h1>
+  <form action="/login" method="POST">
+    <label>Username or Email</label>
+    <input name="name" type="text">
+    <label>Password</label>
+    <input name="password" type="text">
+    <div class="button">
+    <button class="modal-close waves-effect waves-green btn-flat">Submit</button>
+    </div>
+    <br><br>
+    <h5>Or Log in with LinkedIn:</h5>
+    <div class="linkedin-margin">
       <div class="linkedin">
-      <i class="fab fa-linkedin"></i><a href="/auth/linkedin"> LinkedIn</a>
-      </div>
+        <i class="fab fa-linkedin"></i><a href="/auth/linkedin"> LinkedIn</a>
       </div>
     </div>
-    <div class="modal-footer center-align">
-      <a type="submit" class="modal-close waves-effect waves-green btn-flat">Submit</a>
-    </div>
-    </form>
+
+  </form>
+</div>
