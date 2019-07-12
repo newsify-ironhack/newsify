@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,35 +8,47 @@
   <title>{{title}}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/css?family=Germania+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
-<body>
-<nav>
-  <div class="nav-container">
-    <div class="row nav-row">
-      <div class="col s11 m4 l3 valign-wrapper">
-        <a href="/"><img class="logo" src="/images/logo.png" ></a>
-      </div>
 
-      <div class="col s9 m8 l9 hide-on-small-only">
-        <ul id="nav-options">
-          <li>Trending</li>
-          <li>Tech</li>
-          <li>Sports</li>
-          <li>Music</li>
-          <li>Health</li>
-        </ul>
-      </div>
-      <div class="show-on-small s1">
-        <span>user</span>
+<body>
+  <nav>
+    <div class="nav-container">
+      <div class="row nav-row">
+        <div class="col s11 m4 l3 valign-wrapper">
+          <a href="/"><img class="logo" src="/images/logo.png"></a>
+        </div>
+
+        <div class="col s9 m8 l9 hide-on-small-only">
+          <ul id="nav-options">
+            <li class="topic"><a href="/">Trending</a></li>
+            <li class="topic"><a href="/">Tech</a></li>
+            <li class="topic"><a href="/">Sports</a></li>
+            <li class="topic"><a href="/">Music</a></li>
+            <li class="topic"><a href="/">Health</a></li>
+            <li><a class='dropdown-trigger' href='#' data-target='dropdown1'><i id="profile-icon"
+                  class="material-icons">person</i></a></li>
+            <ul id='dropdown1' class='dropdown-content'>
+              <li><a href="#!">Sign up</a></li>
+              <li><a href="#!">Log in</a></li>
+              <li class="divider" tabindex="-1"></li>
+              <li><a href="#!">Profile</a></li>
+            </ul>
+          </ul>
+        </div>
+        <div class="show-on-small s1">
+          <span>user</span>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
-        
+  </nav>
+
   {{{body}}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="/javascripts/script.js"></script>
 </body>
+
 </html>

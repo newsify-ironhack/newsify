@@ -48,6 +48,9 @@ div.text-row {
   color: #0079C6;
   font-size: 14vw;
 }
+#profile-icon{
+  color: white;
+}
 
 a {
   color: #00B7FF;
@@ -56,6 +59,28 @@ a {
   background-color: black;
   color: white;
 }
+#about-section{
+  background-color: #0079C6;
+  padding-top: 5%;
+
+}
+.about-title{
+  display: inline;
+  color: white;
+  font-size: 80px;
+}
+#newsify-about-section{
+  display: inline;
+  font-family: 'Germania One', cursive;
+  color: black;
+}
+#emphasis{
+  color: black;
+}
+.about-tagline{
+  color: white;
+  font-size: 40px;
+}
 // .nav-wrapper{
 //   background-color: black;
 //   color: white;
@@ -63,8 +88,39 @@ a {
 .nav-wrapper li:hover {
   background-color: #bdbdbd;
 }
+#about-paragraph{
+  color: white;
+
+}
+.dropdown-content{
+  left: 85% !important;
+  top: 64px !important;
+}
+.dropdown-content > li > a{
+color: black;
+}
 
 #nav-options{
   display: flex;
   justify-content: space-between;
+}
+#nav-options > li:hover{
+  background-color: #bdbdbd;
+}
+.linkedin{
+  background-color: #0079C6;
+  display: inline;
+  padding: 10px 20px;
+}
+.linkedin *{
+  text-decoration: none;
+  font-size: 15px;
+  color: white;
+}
+.linkedin-margin{
+  margin-top: 30px;
+}
+#signup-modal{
+  max-height: 800px !important;
+  top: 5% !important;
 }
