@@ -1,11 +1,12 @@
-module.exports = function(app) {
+module.exports = function(app, passport) {
   app.get('/', (req, res, next) => {
+    console.log(req.flash())
     res.render('homepage');
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/profile',
-    failureRedirect: '/signup',
+    failureRedirect: '/',
     failureFlash: true
   }))
 
@@ -24,6 +25,7 @@ module.exports = function(app) {
   }));
 
   app.get('/profile', (req, res) => {
+    console.log(req.flash())
     res.render('profile')
   })
 }

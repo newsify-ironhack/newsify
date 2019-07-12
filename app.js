@@ -58,6 +58,6 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
-require('./routes/index')(app);
+require('./routes/index')(app,passport);
 
 module.exports = app;
