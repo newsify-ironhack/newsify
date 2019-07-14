@@ -1,30 +1,76 @@
-<section class="profile-top valign-wrapper center-align">
-  <img src="{{user.img}}" alt="user-image" class="responsive-img circle userImage">
-  <div>
-    <h2>What Matters to {{user.username}}</h2>
-  </div>
-</section>
-<section class="profile-divider"></section>
-<section class="profile-user-info">
-  <div class="container profile-container">
+<section id="profile-view">
+  <div class="container">
     <div class="row">
-      <div class="col m2 l3 profile-sides hide-on-small-only">
-        <h1>Random stuff</h1>
-        <p>
-          enwvjktnwgoibt9nej4tnjktdnwkfnbinetkbunejwbnfjklbenwfjkebtunfjebt4enjwfkbn4iewint4unwebjn2wejnwuienwbfjnjfknaknjwebnenwjbtkk4nbejnfnvwjnetjinebnt
-        </p>
+      <div class="col s3">
+
+        <div class="row">
+          <div class="col s12 center-align">
+            <img class="circle" src={{user.img}}>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 center-align">
+            <h5>{{user.name}}</h5>
+            <p>{{user.username}}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s6 center-align">
+            <p>News</p>
+            <span>100</span>
+          </div>
+
+          <div class="col s6 center-align">
+            <p>Followers</p>
+            <span>50</span>
+          </div>
+        </div>
       </div>
-      <div class="col s12 m8 l6">
-        <h1>Random stuff</h1>
-        <p>
-          enwvjktnwgoibt9nej4tnjktdnwkfnbinetkbunejwbnfjklbenwfjkebtunfjebt4enjwfkbn4iewint4unwebjn2wejnwuienwbfjnjfknaknjwebnenwjbtkk4nbejnfnvwjnetjinebnt
-        </p>
+
+      <div class="col s6">
+        <h5>Your saved news</h5>
+        {{#each allNews}}
+          <div class="row">
+            {{!-- {{> newsPartial}} --}}
+            <div class="col s12">
+              <div class="card newCard">
+                <div class="card-image">
+                  <img src="{{this.urlToImage}}">
+                </div>
+                <div class="card-content center-align">
+                  <div class="row">
+                    <div class="col s12">
+                      <h5>{{this.title}}</h5>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s12">
+                      <a href="#readmore-modal{{@index}}" class="waves-effect black btn-small modal-trigger">Read more</a>
+                    </div>
+                  </div>
+                  <div class="like-comment-section">
+                    <div class="col s6">
+                      <a class="btn social-buttons"><i class="far fa-thumbs-up"></i>36 likes</a>
+                    </div>
+
+                    <div class="col s6">
+                      <a class="btn social-buttons">Comments</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="readmore-modal{{@index}}" class="modal newsmodals" tabindex="0">
+                {{> readmorePartial}}
+              </div>
+            </div>
+          </div>
+        {{/each}}  
       </div>
-      <div class="col m2 l3 profile-sides hide-on-small-only">
-        <h1>Random stuff</h1>
-        <p>
-          enwvjktnwgoibt9nej4tnjktdnwkfnbinetkbunejwbnfjklbenwfjkebtunfjebt4enjwfkbn4iewint4unwebjn2wejnwuienwbfjnjfknaknjwebnenwjbtkk4nbejnfnvwjnetjinebnt
-        </p>
+
+      <div class="col s3">
+        <p>Recommended users</p>
       </div>
     </div>
   </div>

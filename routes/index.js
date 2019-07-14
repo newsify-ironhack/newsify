@@ -24,10 +24,17 @@ module.exports = function(app, passport,newsapi) {
     failureFlash: true
   }));
 
-  app.get('/profile', (req, res) => {
+  app.get('/profile', isLoggedIn, (req, res) => {
     console.log(req.user)
     console.log(req.flash())
-    res.render('profile', {user: req.user})
+
+    newsapi.v2.everything({q: 'technology'})
+    .then((response) => {
+      res.render('profile',{allNews: response.articles, topic: 'Tech', user: req.user})
+    })
+    .catch((err)=>{
+      next(err);
+    })
   })
 
   app.get('/trending',(req,res,next)=>{
@@ -42,8 +49,10 @@ module.exports = function(app, passport,newsapi) {
   })
   .catch((err)=>{
     next(err);
+    })
   })
-})
+}
+
 app.get('/sports',(req,res,next)=>{
   newsapi.v2.everything({q: 'sports'})
   .then((response) => {
@@ -99,8 +108,17 @@ app.get('/music',(req,res,next)=>{
 .catch((err)=>{
   next(err);
   })
+
+  app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+  });
+
+  function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect('/')
+    }
+  }
 })
-
-}
-
-

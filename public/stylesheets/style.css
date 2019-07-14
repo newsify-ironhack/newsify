@@ -5,6 +5,10 @@ body {
   margin: 0;
   padding: 0; }
 
+section#profile-view {
+  background-color: #e6ecf0;
+  padding-top: 50px; }
+
 div.nav-container {
   width: 85%;
   height: 100%;
@@ -156,6 +160,21 @@ a {
   height: 50px;
   background-color: white; }
 
+<<<<<<< HEAD
+.newCard {
+  height: auto; }
+
+.card-content {
+  overflow: auto; }
+
+.social-buttons {
+  background-color: white;
+  color: black;
+  width: 100%; }
+
+.social-buttons:hover {
+  background-color: white; }
+=======
 .description {
   font-size: 20px; }
 
@@ -182,5 +201,6 @@ a {
 
 .bookmark-icon {
   color: black !important; }
+>>>>>>> 95501f31583aab00f0ce177ad6ed2619f8bab43b
 
 /*# sourceMappingURL=style.css.map */
