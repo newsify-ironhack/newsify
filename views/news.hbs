@@ -1,0 +1,12 @@
+<h2 class="center-align">Results for {{topic}}</h2>
+<div class="container">
+<div class="row">
+{{#each allNews}}
+{{> newsPartial}}
+{{/each}}
+ <a href="#readmore-modal" class="waves-effect black btn-small modal-trigger">Read more</a>
+ <div id="readmore-modal" class="modal" tabindex="0">
+        {{> readmorePartial}}
+  </div>
+</div>
+</div>

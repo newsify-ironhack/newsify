@@ -11,6 +11,9 @@ const path         = require('path');
 const session      = require('express-session');
 const passport     = require('passport');
 const flash        = require('connect-flash');
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI(process.env.NEWSAPISECRETKEY);
+
 
 
 mongoose
@@ -58,6 +61,6 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
-require('./routes/index')(app,passport);
+require('./routes/index')(app,passport,newsapi);
 
 module.exports = app;
