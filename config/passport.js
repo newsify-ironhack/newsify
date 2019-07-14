@@ -58,10 +58,8 @@ module.exports = function(passport) {
         passwordField: 'password',
         passReqToCallback: true
     }, async function(req, username, password, done) {
-        const { email } = req.body;
-
         try {
-            const userDB = await User.findOne({$or: [{email}, {username}]}).exec()
+            const userDB = await User.findOne({$or: [{email: username}, {username}]}).exec()
 
             if(!userDB) {
                 return done(null, false, req.flash('loginMessage', 'User not found. Please Signup'))
@@ -83,7 +81,28 @@ module.exports = function(passport) {
         clientSecret: process.env.LINKEDIN_SECRET,
         callbackURL: "/auth/linkedin/callback",
         scope: ['r_emailaddress', 'r_liteprofile'],
-    }, function(accessToken, refreshToken, profile, done) {
-        console.log(profile)
+    }, async function(accessToken, refreshToken, profile, done) {
+        console.log(profile._json.profilePicture.displayImage)
+        const email = profile.emails[0].value;
+        try {
+            const userDB = await User.findOne({email});
+
+            if(userDB) {
+                done(null, userDB)
+            } else {
+                console.log(profile._json.profilePicture)
+                const newUser = new User();
+                newUser.name = profile.displayName;
+                newUser.email = email;
+                newUser.img = `https://api.linkedin.com/v2/me?projection=(${profile.id},profilePicture(${profile._json.profilePicture.displayImage}~:playableStreams))`;
+                newUser.linkedin = true;
+
+                await newUser.save()
+                return done(null, newUser)
+            }
+
+        } catch(err) {
+            done(err)
+        }
     }));
 }

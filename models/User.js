@@ -25,10 +25,22 @@ const userSchema = new Schema({
         // default: 
     },
     news: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'New' }]
+        type: [{ type: Schema.Types.ObjectId, ref: 'New' }],
+        qty: {
+            type: Number,
+            default: 0
+        }
     },
     following: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+        type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        qty: {
+            type: Number,
+            default: 0
+        }
+    },
+    linkedin: {
+        type: Boolean,
+        default: false
     }
 })
 

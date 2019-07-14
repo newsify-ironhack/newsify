@@ -25,8 +25,9 @@ module.exports = function(app, passport) {
   }));
 
   app.get('/profile', (req, res) => {
+    console.log(req.user)
     console.log(req.flash())
-    res.render('profile')
+    res.render('profile', {user: req.user})
   })
 }
 
