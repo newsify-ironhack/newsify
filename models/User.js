@@ -22,7 +22,7 @@ const userSchema = new Schema({
     },
     img: {
         type: String,
-        // default: 
+        default: "/images/userdefault.png"
     },
     news: {
         type: [{ type: Schema.Types.ObjectId, ref: 'New' }],

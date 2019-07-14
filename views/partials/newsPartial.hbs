@@ -6,6 +6,10 @@
         </div>
         <div class="card-content">
           <h5>{{this.title}}</h5>
+          <a href="#readmore-modal{{@index}}" class="waves-effect black btn-small modal-trigger">Read more</a>
       </div>
     </div>
+ <div id="readmore-modal{{@index}}" class="modal newsmodals" tabindex="0">
+        {{> readmorePartial}}
+  </div>
     </div>
