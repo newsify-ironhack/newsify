@@ -18,3 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
 }, false);
+
+function toggleBookmark(theCard){
+  if($(`#${theCard.id} > i`).hasClass('far')){
+  $(`#${theCard.id} > i`).removeClass('far').addClass('fas');
+  $(`#${theCard.id}`).css('pointer-events', 'none')
+  }else{
+    $(`#${theCard.id} > i`).removeClass('fas').addClass('far');
+    $(`#${theCard.id}`).css('pointer-events', 'none')
+  }
+
+  setTimeout(() => {
+    $(`#${theCard.id}`).css('pointer-events', 'all')
+  }, 1000)
+
+}

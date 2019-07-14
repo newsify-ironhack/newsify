@@ -31,10 +31,13 @@
             <li><a class='dropdown-trigger' href='' data-target='dropdown1'><i id="profile-icon"
                   class="material-icons">person</i></a></li>
             <ul id='dropdown1' class='dropdown-content'>
+              {{#if user}}
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/logout">Log out</a></li>   
+              {{else}}
               <li><a class="modal-trigger" href="#signup-modal">Sign up</a></li>
               <li><a class="modal-trigger" href="#login-modal">Log in</a></li>
-              <li class="divider" tabindex="-1"></li>
-              <li><a href="/profile">Profile</a></li>
+              {{/if}}
             </ul>
           </ul>
         </div>
@@ -46,7 +49,12 @@
   </nav>
 
   {{{body}}}
-  
+  <div id="login-modal" class="modal">
+        {{> loginPartial}}
+      </div>
+      <div id="signup-modal" class="modal">
+        {{> signupPartial}}
+      </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="/javascripts/script.js"></script>
