@@ -82,7 +82,7 @@ module.exports = function(passport) {
         callbackURL: "/auth/linkedin/callback",
         scope: ['r_emailaddress', 'r_liteprofile'],
     }, async function(accessToken, refreshToken, profile, done) {
-        console.log(profile._json.profilePicture.displayImage)
+        console.log(profile)
         const email = profile.emails[0].value;
         try {
             const userDB = await User.findOne({email});
@@ -94,7 +94,7 @@ module.exports = function(passport) {
                 const newUser = new User();
                 newUser.name = profile.displayName;
                 newUser.email = email;
-                newUser.img = `https://api.linkedin.com/v2/me?projection=(${profile.id},profilePicture(${profile._json.profilePicture.displayImage}~:playableStreams))`;
+                newUser.img = profile.photos[0].value
                 newUser.linkedin = true;
 
                 await newUser.save()
