@@ -1,7 +1,7 @@
 module.exports = function(app, passport,newsapi) {
   app.get('/', (req, res, next) => {
     console.log(req.flash())
-    res.render('homepage');
+    res.render('homepage', {user: req.user});
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
@@ -33,8 +33,12 @@ module.exports = function(app, passport,newsapi) {
   app.get('/trending',(req,res,next)=>{
     newsapi.v2.topHeadlines({country: 'us'})
     .then((response) => {
-      console.log(response)
-    res.render('news',{allNews: response.articles, topic: 'Trending'})
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Trending', user: req.user})
   })
   .catch((err)=>{
     next(err);
@@ -43,8 +47,12 @@ module.exports = function(app, passport,newsapi) {
 app.get('/sports',(req,res,next)=>{
   newsapi.v2.everything({q: 'sports'})
   .then((response) => {
-  console.log(response);
-  res.render('news',{allNews: response.articles, topic: 'Sports'})
+    response.articles.forEach((e)=>{
+      let date = e.publishedAt;
+      let modifiedDate = date.substring(0,10);
+      e.publishedAt = modifiedDate;
+    })
+  res.render('news',{allNews: response.articles, topic: 'Sports', user: req.user})
 })
 .catch((err)=>{
   next(err);
@@ -53,8 +61,12 @@ app.get('/sports',(req,res,next)=>{
 app.get('/health',(req,res,next)=>{
   newsapi.v2.everything({q: 'health'})
   .then((response) => {
-  console.log(response);
-  res.render('news',{allNews: response.articles, topic: 'Health'})
+    response.articles.forEach((e)=>{
+      let date = e.publishedAt;
+      let modifiedDate = date.substring(0,10);
+      e.publishedAt = modifiedDate;
+    })
+  res.render('news',{allNews: response.articles, topic: 'Health', user: req.user})
 })
 .catch((err)=>{
   next(err);
@@ -63,8 +75,12 @@ app.get('/health',(req,res,next)=>{
 app.get('/tech',(req,res,next)=>{
   newsapi.v2.everything({q: 'technology'})
   .then((response) => {
-  console.log(response);
-  res.render('news',{allNews: response.articles, topic: 'Tech'})
+    response.articles.forEach((e)=>{
+      let date = e.publishedAt;
+      let modifiedDate = date.substring(0,10);
+      e.publishedAt = modifiedDate;
+    })
+  res.render('news',{allNews: response.articles, topic: 'Tech', user: req.user})
 })
 .catch((err)=>{
   next(err);
@@ -73,8 +89,12 @@ app.get('/tech',(req,res,next)=>{
 app.get('/music',(req,res,next)=>{
   newsapi.v2.everything({q: 'music'})
   .then((response) => {
-  console.log(response); 
-  res.render('news',{allNews: response.articles, topic: 'Music'})
+    response.articles.forEach((e)=>{
+      let date = e.publishedAt;
+      let modifiedDate = date.substring(0,10);
+      e.publishedAt = modifiedDate;
+    })
+  res.render('news',{allNews: response.articles, topic: 'Music', user: req.user})
 })
 .catch((err)=>{
   next(err);

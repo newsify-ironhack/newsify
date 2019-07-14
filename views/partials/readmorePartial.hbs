@@ -1,8 +1,20 @@
 <div class="modal-content">
   {{!-- <iframe class="iframes" src="{{this.url}}"></iframe> --}}
-  <h4>{{this.title}}</h4>
-  <h5>By: {{this.author}} | Date: {{this.publishedAt}}</h5>
-  <a href="{{this.url}}" target="_blank"><h6>Link to Article</h6></a>
-  <p>{{this.description}}</p>
-  <p>{{this.content}}</p>
+  <div class="center-align">
+    <h4>{{this.title}}</h4>
+  </div>
+  <hr>
+  <br>
+  <p class="description">{{this.description}}</p>
+  <div class="right-align">
+    {{#if this.author}}
+    <h6>By: {{this.author}}</h6>
+    {{/if}}
+    <h6>Date: {{this.publishedAt}}</h6>
+  </div>
+  <div class="center-align">
+    <a class="waves-effect black btn-small link-article" href="{{this.url}}" target="_blank">
+      <h6>Link to Article</h6>
+    </a>
+  </div>
 </div>
