@@ -23,18 +23,18 @@
 
         <div class="col s9 m8 l9 hide-on-small-only">
           <ul id="nav-options">
-            <li class="topic"><a href="/">Trending</a></li>
-            <li class="topic"><a href="/">Tech</a></li>
-            <li class="topic"><a href="/">Sports</a></li>
-            <li class="topic"><a href="/">Music</a></li>
-            <li class="topic"><a href="/">Health</a></li>
-            <li><a class='dropdown-trigger' href='#' data-target='dropdown1'><i id="profile-icon"
+            <li class="topic"><a href="/trending">Trending</a></li>
+            <li class="topic"><a href="/tech">Tech</a></li>
+            <li class="topic"><a href="/sports">Sports</a></li>
+            <li class="topic"><a href="/music">Music</a></li>
+            <li class="topic"><a href="/health">Health</a></li>
+            <li><a class='dropdown-trigger' href='' data-target='dropdown1'><i id="profile-icon"
                   class="material-icons">person</i></a></li>
             <ul id='dropdown1' class='dropdown-content'>
-              <li><a href="#!">Sign up</a></li>
-              <li><a href="#!">Log in</a></li>
+              <li><a class="modal-trigger" href="#signup-modal">Sign up</a></li>
+              <li><a class="modal-trigger" href="#login-modal">Log in</a></li>
               <li class="divider" tabindex="-1"></li>
-              <li><a href="#!">Profile</a></li>
+              <li><a href="/profile">Profile</a></li>
             </ul>
           </ul>
         </div>
@@ -46,6 +46,7 @@
   </nav>
 
   {{{body}}}
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="/javascripts/script.js"></script>

@@ -16,5 +16,5 @@ document.addEventListener('DOMContentLoaded', () => {
   var instances = M.Dropdown.init(elems);
   var modalElems = document.querySelectorAll('.modal');
   var modalInstances = M.Modal.init(modalElems,{});
- console.log('test');
+  console.log('test');
 }, false);
