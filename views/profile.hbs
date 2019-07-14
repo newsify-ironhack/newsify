@@ -1,2 +1,77 @@
-<h1>profile</h1>
-<img src="{{user.img}}" alt="user-image">
+<section id="profile-view">
+  <div class="container">
+    <div class="row">
+      <div class="col s3">
+
+        <div class="row">
+          <div class="col s12 center-align">
+            <img class="circle" src={{user.img}}>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 center-align">
+            <h5>{{user.name}}</h5>
+            <p>{{user.username}}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s6 center-align">
+            <p>News</p>
+            <span>100</span>
+          </div>
+
+          <div class="col s6 center-align">
+            <p>Followers</p>
+            <span>50</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s6">
+        <h5>Your saved news</h5>
+        {{#each allNews}}
+          <div class="row">
+            {{!-- {{> newsPartial}} --}}
+            <div class="col s12">
+              <div class="card newCard">
+                <div class="card-image">
+                  <img src="{{this.urlToImage}}">
+                </div>
+                <div class="card-content center-align">
+                  <div class="row">
+                    <div class="col s12">
+                      <h5>{{this.title}}</h5>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s12">
+                      <a href="#readmore-modal{{@index}}" class="waves-effect black btn-small modal-trigger">Read more</a>
+                    </div>
+                  </div>
+                  <div class="like-comment-section">
+                    <div class="col s6">
+                      <a class="btn social-buttons"><i class="far fa-thumbs-up"></i>36 likes</a>
+                    </div>
+
+                    <div class="col s6">
+                      <a class="btn social-buttons">Comments</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="readmore-modal{{@index}}" class="modal newsmodals" tabindex="0">
+                {{> readmorePartial}}
+              </div>
+            </div>
+          </div>
+        {{/each}}  
+      </div>
+
+      <div class="col s3">
+        <p>Recommended users</p>
+      </div>
+    </div>
+  </div>
+</section>
