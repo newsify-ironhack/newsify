@@ -207,3 +207,16 @@ color: black;
 .bookmark-icon{
   color: black !important;
 }
+.card-content {
+  overflow: auto;
+}
+
+.social-buttons {
+  width: 100%;
+  background-color: white;
+  color: black;
+}
+
+.social-buttons:hover {
+  background-color: white;
+}
