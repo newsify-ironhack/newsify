@@ -1,12 +1,24 @@
-<div class="col s12 m8 l4">
+<div class="col s12 m8 push-m2 l4">
   <div class="card eachArticle">
+    {{#if this.urlToImage}}
     <div class="card-image">
       <img src="{{this.urlToImage}}">
-      <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
     </div>
+    {{else}}
+    <div class="card-image">
+      <div class="center-align">
+    <img src="/images/default-article-image.png" class="default-image">
+   </div>
+    </div>
+    {{/if}}
     <div class="card-content">
       <h5>{{this.title}}</h5>
+      <div class="bottom-container">
+      <div class="reader-options">
       <a href="#readmore-modal{{@index}}" class="waves-effect black btn-small modal-trigger">Read more</a>
+      <button id="{{@index}}" onclick="toggleBookmark(this)" class="btn-floating waves-effect white waves-light"><i class="bookmark-icon far fa-bookmark"></i></button>
+      </div>
+      </div>
     </div>
   </div>
   <div id="readmore-modal{{@index}}" class="modal newsmodals" tabindex="0">

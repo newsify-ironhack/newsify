@@ -142,10 +142,6 @@ color: black;
   height: 900px !important;
   top: 5% !important;
 }
-.iframes{
-  width: 100%;
-  height: 900px !important;
-}
 .profile-top{
   background-color: #0079C6;
   height: 300px;
@@ -184,21 +180,30 @@ color: black;
   height: 50px;
   background-color: white;
 }
-
-.newCard {
-  height: auto;
+.description{
+  font-size: 20px;
 }
-
-.card-content {
-  overflow: auto;
+.link-article{
+  margin-top: 10%;
+  padding-bottom: 10px;
 }
-
-.social-buttons {
-  background-color: white;
-  color: black;
+.reader-options{
+  display: flex;
+  justify-content: space-between;
+  margin: 0 3%;
+}
+.bottom-container{
+  position: absolute;
+  left: 0;
+  bottom: 5px;
   width: 100%;
 }
-
-.social-buttons:hover {
-  background-color: white;
+.default-image{
+  height: 50%;
+  width: 50% !important;
+  align-self: center;
+  margin-left: 25% !important;
+}
+.bookmark-icon{
+  color: black !important;
 }
