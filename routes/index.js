@@ -51,74 +51,74 @@ module.exports = function(app, passport,newsapi) {
     next(err);
     })
   })
+  app.get('/sports',(req,res,next)=>{
+    newsapi.v2.everything({q: 'sports'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Sports', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
+  app.get('/health',(req,res,next)=>{
+    newsapi.v2.everything({q: 'health'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Health', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
+  app.get('/tech',(req,res,next)=>{
+    newsapi.v2.everything({q: 'technology'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Tech', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
+  app.get('/music',(req,res,next)=>{
+    newsapi.v2.everything({q: 'music'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Music', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  
+    app.get('/logout', (req, res) => {
+      req.logout();
+      res.redirect('/');
+    });
+  
+  })
 }
 
-app.get('/sports',(req,res,next)=>{
-  newsapi.v2.everything({q: 'sports'})
-  .then((response) => {
-    response.articles.forEach((e)=>{
-      let date = e.publishedAt;
-      let modifiedDate = date.substring(0,10);
-      e.publishedAt = modifiedDate;
-    })
-  res.render('news',{allNews: response.articles, topic: 'Sports', user: req.user})
-})
-.catch((err)=>{
-  next(err);
-  })
-})
-app.get('/health',(req,res,next)=>{
-  newsapi.v2.everything({q: 'health'})
-  .then((response) => {
-    response.articles.forEach((e)=>{
-      let date = e.publishedAt;
-      let modifiedDate = date.substring(0,10);
-      e.publishedAt = modifiedDate;
-    })
-  res.render('news',{allNews: response.articles, topic: 'Health', user: req.user})
-})
-.catch((err)=>{
-  next(err);
-  })
-})
-app.get('/tech',(req,res,next)=>{
-  newsapi.v2.everything({q: 'technology'})
-  .then((response) => {
-    response.articles.forEach((e)=>{
-      let date = e.publishedAt;
-      let modifiedDate = date.substring(0,10);
-      e.publishedAt = modifiedDate;
-    })
-  res.render('news',{allNews: response.articles, topic: 'Tech', user: req.user})
-})
-.catch((err)=>{
-  next(err);
-  })
-})
-app.get('/music',(req,res,next)=>{
-  newsapi.v2.everything({q: 'music'})
-  .then((response) => {
-    response.articles.forEach((e)=>{
-      let date = e.publishedAt;
-      let modifiedDate = date.substring(0,10);
-      e.publishedAt = modifiedDate;
-    })
-  res.render('news',{allNews: response.articles, topic: 'Music', user: req.user})
-})
-.catch((err)=>{
-  next(err);
-  })
-
-  app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
-  });
-
-  function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        res.redirect('/')
-    }
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+      return next();
+  } else {
+      res.redirect('/')
   }
-})
+}
