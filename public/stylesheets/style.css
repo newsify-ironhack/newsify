@@ -113,4 +113,8 @@ a {
   display: flex;
   justify-content: center; }
 
+.eachArticle {
+  height: 500px !important;
+  overflow-y: auto; }
+
 /*# sourceMappingURL=style.css.map */
