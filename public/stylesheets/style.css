@@ -198,4 +198,8 @@ a {
 .social-buttons:hover {
   background-color: white; }
 
+.profile-img {
+  height: 100px;
+  width: 100px; }
+
 /*# sourceMappingURL=style.css.map */
