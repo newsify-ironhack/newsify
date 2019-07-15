@@ -36,7 +36,6 @@ function toggleBookmark(theCard){
   let newsAuthor = $(readMoreContent).find('.right-align').find('.author').html();
   let newsDate = $(readMoreContent).find('.right-align').find('.date').html();
   let urlToArticle = $(readMoreContent).find('.center-align').find('a').attr('href');
-  console.log(newsAuthor,newsDate,urlToArticle);
   if(newsAuthor == 'undefined'){
     newsAuthor = 'unknown author'
   }
@@ -57,7 +56,18 @@ function toggleBookmark(theCard){
   })
   }else{
     $(`#${theCard.id} > i`).removeClass('fas').addClass('far');
-    $(`#${theCard.id}`).css('pointer-events', 'none')
+    $(`#${theCard.id}`).css('pointer-events', 'none');
+    let fullCard = $(`#card${theCard.id}`);
+    let children = fullCard.children();
+    let contentDiv = children[1];
+    let newsTitle = $(contentDiv).find('h5').html();
+    axios.post('/news/delete',{title: newsTitle})
+    .then((response)=>{
+      console.log(response);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
   }
 
   setTimeout(() => {

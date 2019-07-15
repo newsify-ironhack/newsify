@@ -15,7 +15,8 @@ const newSchema = new Schema({
     required: true
   },
   picture: {
-    type: String
+    type: String,
+    default: '/images/default-article-image.png'
   },
   author: {
     type: String,

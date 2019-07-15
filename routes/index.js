@@ -134,6 +134,15 @@ module.exports = function(app, passport,newsapi) {
     })
     
   })
+  app.post('/news/delete',(req,res,next)=>{
+    News.findOneAndRemove({title: req.body.title})
+    .then((response)=>{
+      res.json(response);
+    })
+    .catch((err)=>{
+      res.json(err);
+    })
+  })
 }
 
 function isLoggedIn(req, res, next) {
