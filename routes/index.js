@@ -135,15 +135,15 @@ module.exports = function(app, passport,newsapi) {
     
   })
 
-  app.post('comments/create', (req, res) => {
-    console.log(req)
+  app.post('/news/delete',(req,res,next)=>{
+    News.findOneAndRemove({title: req.body.title})
+    .then((response)=>{
+      res.json(response);
+    })
+    .catch((err)=>{
+      res.json(err);
+    })
   })
-}
 
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-      return next();
-  } else {
-      res.redirect('/')
-  }
-}
+
+
