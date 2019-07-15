@@ -118,13 +118,13 @@ module.exports = function(app, passport,newsapi) {
 
   app.post('/news/create', (req, res,next) => {
     News.create({
-    owner: req.user,
-    title: req.body.title,
-    description: req.body.description,
-    picture: req.body.picture,
-    author: req.body.author,
-    articleUrl: req.body.articleUrl,
-    articleDate: req.body.articleDate
+      owner: req.user,
+      title: req.body.title,
+      description: req.body.description,
+      picture: req.body.picture,
+      author: req.body.author,
+      articleUrl: req.body.articleUrl,
+      articleDate: req.body.articleDate
     })
     .then((response)=>{
       res.json(response);
