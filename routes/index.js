@@ -144,6 +144,14 @@ module.exports = function(app, passport,newsapi) {
       res.json(err);
     })
   })
+}
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+      return next();
+  } else {
+      res.redirect('/')
+  }
+}
 
 
 
