@@ -134,6 +134,7 @@ module.exports = function(app, passport,newsapi) {
     })
     
   })
+
   app.post('/news/delete',(req,res,next)=>{
     News.findOneAndRemove({title: req.body.title})
     .then((response)=>{
@@ -143,13 +144,7 @@ module.exports = function(app, passport,newsapi) {
       res.json(err);
     })
   })
-
-  
-  app.post('comments/create', (req, res) => {
-    console.log(req)
-  })
 }
-
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
       return next();
@@ -157,3 +152,6 @@ function isLoggedIn(req, res, next) {
       res.redirect('/')
   }
 }
+
+
+
