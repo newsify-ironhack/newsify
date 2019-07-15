@@ -8,9 +8,9 @@
   <p class="description">{{this.description}}</p>
   <div class="right-align">
     {{#if this.author}}
-    <h6>By: {{this.author}}</h6>
+    <h6>By: <span class="author">{{this.author}}</span></h6>
     {{/if}}
-    <h6>Date: {{this.publishedAt}}</h6>
+    <h6>Date: <span class="date">{{this.publishedAt}}</span></h6>
   </div>
   <div class="center-align">
     <a class="waves-effect black btn-small link-article" href="{{this.url}}" target="_blank">
