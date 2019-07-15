@@ -20,22 +20,34 @@ const newSchema = new Schema({
   author: {
     type: String,
   },
-  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  likes: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    qty: {
+        type: Number,
+        default: 0
+    }
+  },
+  comments: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    qty: {
+        type: Number,
+        default: 0
+    }
+  },
   location: {
     type: String
-  },
-  source: {
-    id: {
-      type: String
-    },
-    name: {
-      type: String
-    }
   },
   articleUrl: {
     type: String,
     require: true
+  },
+  articleDate: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   }
 })
 

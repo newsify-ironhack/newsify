@@ -106,12 +106,16 @@ module.exports = function(app, passport,newsapi) {
   .catch((err)=>{
     next(err);
     })
+    
+  })
   
-    app.get('/logout', (req, res) => {
-      req.logout();
-      res.redirect('/');
-    });
-  
+  app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+  });
+
+  app.post('/news/create', (req, res) => {
+    console.log(req)
   })
 }
 
