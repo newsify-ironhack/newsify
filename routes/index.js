@@ -1,3 +1,4 @@
+const News = require('../models/New');
 module.exports = function(app, passport,newsapi) {
   app.get('/', (req, res, next) => {
     console.log(req.flash())
@@ -101,6 +102,7 @@ module.exports = function(app, passport,newsapi) {
         let modifiedDate = date.substring(0,10);
         e.publishedAt = modifiedDate;
       })
+    console.log(req.user);
     res.render('news',{allNews: response.articles, topic: 'Music', user: req.user})
   })
   .catch((err)=>{
@@ -114,8 +116,23 @@ module.exports = function(app, passport,newsapi) {
     res.redirect('/');
   });
 
-  app.post('/news/create', (req, res) => {
-    console.log(req)
+  app.post('/news/create', (req, res,next) => {
+    News.create({
+    owner: req.user,
+    title: req.body.title,
+    description: req.body.description,
+    picture: req.body.picture,
+    author: req.body.author,
+    articleUrl: req.body.articleUrl,
+    articleDate: req.body.articleDate
+    })
+    .then((response)=>{
+      res.json(response);
+  })
+    .catch((err)=>{
+      res.json(err);
+    })
+    
   })
 }
 

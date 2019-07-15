@@ -16,7 +16,9 @@
       <div class="bottom-container">
       <div class="reader-options">
       <a href="#readmore-modal{{@index}}" class="waves-effect black btn-small modal-trigger">Read more</a>
+      {{#if user}}
       <button id="{{@index}}" onclick="toggleBookmark(this)" class="btn-floating waves-effect white waves-light"><i class="bookmark-icon far fa-bookmark"></i></button>
+      {{/if}}
       </div>
       </div>
     </div>
