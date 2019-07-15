@@ -106,13 +106,11 @@ module.exports = function(app, passport,newsapi) {
   .catch((err)=>{
     next(err);
     })
-  
+  })
     app.get('/logout', (req, res) => {
       req.logout();
       res.redirect('/');
     });
-  
-  })
 }
 
 function isLoggedIn(req, res, next) {
