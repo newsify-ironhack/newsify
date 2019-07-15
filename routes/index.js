@@ -143,6 +143,8 @@ module.exports = function(app, passport,newsapi) {
       res.json(err);
     })
   })
+
+  
   app.post('comments/create', (req, res) => {
     console.log(req)
   })
