@@ -117,6 +117,10 @@ module.exports = function(app, passport,newsapi) {
   app.post('/news/create', (req, res) => {
     console.log(req)
   })
+
+  app.post('comments/create', (req, res) => {
+    console.log(req)
+  })
 }
 
 function isLoggedIn(req, res, next) {
