@@ -51,9 +51,14 @@ div.text-row {
 a {
   color: #00B7FF; }
 
-#searchbar {
+#search-bar {
   background-color: black;
-  color: white; }
+  color: white;
+  -webkit-transition: width 0.4s ease-in-out !important;
+  transition: width 0.4s ease-in-out !important; }
+
+#search-bar:focus {
+  width: 100% !important; }
 
 #about-section {
   background-color: #0079C6;
