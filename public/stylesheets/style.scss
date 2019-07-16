@@ -60,15 +60,11 @@ div.text-row {
 a {
   color: #00B7FF;
 }
-#search-bar{
+.search-bar{
   background-color: black;
   color: white;
-  -webkit-transition: width 0.4s ease-in-out !important;
-  transition: width 0.4s ease-in-out !important;
 }
-#search-bar:focus{
-  width: 100% !important;
-}
+
 #about-section{
   background-color: #0079C6;
   padding-top: 5%;
@@ -103,11 +99,15 @@ a {
 
 }
 .dropdown-content{
-  left: 85% !important;
+  left: 86% !important;
   top: 64px !important;
 }
 .dropdown-content > li > a{
 color: black;
+}
+.more-options{
+  left: 66% !important;
+  top: 64px !important;
 }
 
 #nav-options{
@@ -342,4 +342,69 @@ span.user-name-span {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+#toggle-search{
+  background-color: black;
+  color: white;
+}
+#search{
+  margin-left: 3%;
+}
+#popup-search{
+  display: none;
+}
+.foundUsers-info{
+display: flex;
+align-content: center;
+justify-content: space-around;
+border: black 2px solid;
+margin-bottom: 10px;
+}
+.foundUsers-info img{
+  width: 50px;
+  border: 1px black solid;
+  margin: 5px 0;
+}
+.user-and-name{
+  align-self: center
+}
+.trending-title{
+  overflow-x: hidden;
+}
+.results-username{
+  color: #0079C6;
+  size: 10px;
+  margin-left: 3px;
+  align-self: center;
+}
+.follow-userResults{
+  align-self: center !important;
+}
+.nameOfUser{
+  text-decoration: none;
+  color: black;
+}
+.trending-topics li{
+  margin: 10px 0;
+  font-size: 20px;
+}
+.rec-Users{
+  display: flex;
+align-content: center;
+border: black 2px solid;
+margin-bottom: 10px;
+margin-top: 10px;
+}
+.rec-Users img{
+  width: 30px;
+  border: 1px black solid;
+  margin: 5px 0;
+}
+.rec-Users-info{
+  display: flex;
+  flex-flow: column;
+  align-content: center;
+  justify-content: center;
+  margin-left: 3px;
+  overflow-x: scroll;
 }

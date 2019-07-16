@@ -1,8 +1,29 @@
 <h2 class="center-align">Results for {{topic}}</h2>
 <div class="container">
-<div id="newsContent" class="row">
-{{#each allNews}}
-{{> newsPartial user=../user}}
-{{/each}}
-</div>
-<div class="loader"></div>
+  {{#if foundUsers}}
+  <h3 class="center-align">User Results</h3>
+  <div id="resultsOfUsers" class="row">
+    {{#each foundUsers}}
+  <div class="foundUsers-info">
+    <div class="col s2">
+    <img class="circle" src={{this.img}}>
+    </div>
+    <div class="col s6 user-and-name">
+     <a class="nameOfUser" href="/profile/{{this._id}}"><p>{{this.name}}</p></a>
+    <p class="results-username">@{{this.username}}</p>
+    </div>
+    <div class="col s4 valign-wrapper">
+    <a class="follow-userResults btn-small black">Follow</a>
+    </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+  <div id="newsContent" class="row">
+    <h3 class="center-align">News Results</h3>
+    {{#each allNews}}
+    {{> newsPartial user=../user}}
+    {{/each}}
+  </div>
+  </div>
+  <div class="loader"></div>

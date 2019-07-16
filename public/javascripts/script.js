@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   var instances = M.Dropdown.init(elems);
   var modalElems = document.querySelectorAll('.modal');
   var modalInstances = M.Modal.init(modalElems,{});
+  var collapsElems = document.querySelectorAll('.collapsible');
+  var collapseInstances = M.Collapsible.init(collapsElems, {});
   console.log('test');
 
   var i = 0;
@@ -169,7 +171,12 @@ function hideComments(btn) {
 let page = 1;
 $(window).scroll(function() {
   if($(window).scrollTop() == $(document).height() - $(window).height()) {
-    let location = window.location.href.split('/');
+    let location = "";
+    if(window.location.href.includes('query')){
+      location = window.location.href.split('=')
+    }else{
+      location = window.location.href.split('/');
+    }
     let axiosLocation = location[location.length-1];
     page++;
     if(page <=2) {
@@ -242,4 +249,20 @@ $(window).scroll(function() {
     }
   }
 });
+
+$("#toggle-search").click(function(){
+  $("#popup-search").css("display","block")
+});
+$(document).mouseup(function(e) 
+{
+    var container = $("#popup-search");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+              container.hide();
+    }
+});
+
+  
 

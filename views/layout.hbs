@@ -26,8 +26,15 @@
             <li class="topic"><a href="/trending">Trending</a></li>
             <li class="topic"><a href="/tech">Tech</a></li>
             <li class="topic"><a href="/sports">Sports</a></li>
-            <li class="topic"><a href="/music">Music</a></li>
-            <li class="topic"><a href="/health">Health</a></li>
+            <li><a class='dropdown-trigger' href='' data-target='dropdown-more-options'>More</a></li>     
+             <ul id='dropdown-more-options' class='dropdown-content more-options'>
+                <li class="topic"><a href="/music">Music</a></li>
+                <li class="topic"><a href="/health">Health</a></li>
+                <li class="topic"><a href="/politics">Politics</a></li>
+                <li class="topic"><a href="/lifestyle">Lifestyle</a></li>
+                <li class="topic"><a href="/celebrities">Celebrities</a></li>
+             </ul>       
+            <li class="topic"><a id="toggle-search"><i class="material-icons">search</i></a></li>
             <li><a class='dropdown-trigger' href='' data-target='dropdown1'><i id="profile-icon"
                   class="material-icons">person</i></a></li>
             <ul id='dropdown1' class='dropdown-content'>
@@ -39,7 +46,6 @@
               <li><a class="modal-trigger" href="#login-modal">Log in</a></li>
               {{/if}}
             </ul>
-            <li><input id="search-bar" type="text" name="search" placeholder="Search.."></li>
           </ul>
         </div>
         <div class="show-on-small s1">
@@ -48,7 +54,15 @@
       </div>
     </div>
   </nav>
-
+  <div id="popup-search">
+    <form action="/query" method="GET">
+        <div class="input-field">
+          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+          <input name="searchFor" id="search" type="search" required>
+          <i class="material-icons">close</i>
+        </div>
+      </form>
+  </div>
   {{{body}}}
   <div id="login-modal" class="modal">
         {{> loginPartial}}
