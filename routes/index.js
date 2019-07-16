@@ -56,6 +56,16 @@ module.exports = function(app, passport,newsapi) {
     next(err);
     })
   })
+  app.get('/trending/:page',(req,res,next)=>{
+    let pageToFind = Number(req.params.page);
+    newsapi.v2.topHeadlines({country: 'us', page: pageToFind})
+    .then((response) => {
+     res.json({response: response.articles, user: req.user});
+  })
+  .catch((err)=>{
+    res.json(err);
+    })
+  })
   app.get('/sports',(req,res,next)=>{
     newsapi.v2.everything({q: 'sports'})
     .then((response) => {
@@ -70,6 +80,18 @@ module.exports = function(app, passport,newsapi) {
     next(err);
     })
   })
+  app.get('/:topic/:page',(req,res,next)=>{
+    let pageToFind = Number(req.params.page);
+    let topic = req.params.topic;
+    newsapi.v2.everything({q: topic, page: pageToFind})
+    .then((response) => {
+      res.json({response: response.articles, user: req.user});
+   })
+   .catch((err)=>{
+     res.json(err);
+     })
+  })
+  
   app.get('/health',(req,res,next)=>{
     newsapi.v2.everything({q: 'health'})
     .then((response) => {
@@ -101,6 +123,7 @@ module.exports = function(app, passport,newsapi) {
   app.get('/music',(req,res,next)=>{
     newsapi.v2.everything({q: 'music'})
     .then((response) => {
+      console.log(response);
       response.articles.forEach((e)=>{
         let date = e.publishedAt;
         let modifiedDate = date.substring(0,10);

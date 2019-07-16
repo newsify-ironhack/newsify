@@ -1,7 +1,8 @@
 <h2 class="center-align">Results for {{topic}}</h2>
 <div class="container">
-<div class="row">
+<div id="newsContent" class="row">
 {{#each allNews}}
 {{> newsPartial user=../user}}
 {{/each}}
 </div>
+<div class="loader"></div>
