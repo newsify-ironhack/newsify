@@ -6,11 +6,6 @@ const likeSchema = new Schema({
     type: Schema.Types.ObjectId, 
     ref: 'User',
     required: true
-  },
-  article: {
-    type: Schema.Types.ObjectId,
-    ref: 'New',
-    required: true
   }
 });
 
