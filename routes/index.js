@@ -1,4 +1,7 @@
 const News = require('../models/New');
+const Comment = require('../models/Comment');
+const Like = require('../models/Like');
+
 module.exports = function(app, passport,newsapi) {
   app.get('/', (req, res, next) => {
     console.log(req.flash())
@@ -25,17 +28,18 @@ module.exports = function(app, passport,newsapi) {
     failureFlash: true
   }));
 
-  app.get('/profile', isLoggedIn, (req, res) => {
-    console.log(req.user)
-    console.log(req.flash())
-
-    newsapi.v2.everything({q: 'technology'})
-    .then((response) => {
-      res.render('profile',{allNews: response.articles, topic: 'Tech', user: req.user})
-    })
-    .catch((err)=>{
-      next(err);
-    })
+  app.get('/profile', isLoggedIn, async (req, res) => {
+    News.find({owner: req.user.id}).populate({path: 'comments', populate: {path: 'user'}})
+      .then((allNews) => {
+        if(allNews.likes) {
+          res.render('profile', {allNews, user: req.user, comments: allNews.comments, likes: allNews.likes, likesNum: allNews.likes.length})
+        } else {
+          res.render('profile', {allNews, user: req.user, comments: allNews.comments, likes: [], likesNum: 0})
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
   })
 
   app.get('/trending',(req,res,next)=>{
@@ -143,8 +147,51 @@ module.exports = function(app, passport,newsapi) {
     .catch((err)=>{
       res.json(err);
     })
+  });
+
+  app.post('/comment/create', async (req, res) => {
+    const { title, content } = req.body;
+
+    try {
+      const getNew = await News.findOne({title})
+      const newComment = await Comment.create({user: req.user._id, article: getNew._id, content})
+
+      getNew.comments.push(newComment._id)
+      await getNew.save()
+
+    } catch(err) {
+      console.log(err)
+    }
+  });
+
+  app.post('/likes/add', async (req, res) => {
+    const  { title } = req.body;
+    try {
+      const updatedNew = await News.findOne({title})
+      const newLike = await Like.create({ user: req.user._id, article: updatedNew._id })
+
+      updatedNew.likes.push(newLike._id);
+      await updatedNew.save()
+
+    } catch(err) {
+      console.log(err)
+    }
+
+  })
+
+  app.post('/likes/remove', async (req, res) => {
+    const { title } = req.body;
+
+    try {
+      const oneNew = await News.findOne({title})
+      const removedLike = await Like.findOneAndRemove({$and: [{user: req.user._id}, {article: oneNew._id}]})
+      const updatedNew = await News.findOneAndUpdate({title}, {$pull: {likes: removedLike._id }})
+    } catch(err) {
+      console.log(err)
+    }
   })
 }
+
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
       return next();

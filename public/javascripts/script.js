@@ -75,3 +75,93 @@ function toggleBookmark(theCard){
   }, 1000)
 
 }
+
+function postComment(button) {
+  const id = button.parentElement.id;
+  const newTitle = document.getElementById(`title-card-${id}`).innerText;
+  const input = document.getElementById(`comment-input-${id}`)
+  
+  const body  = {
+    title: newTitle,
+    content: input.value
+  }
+  if(input.value.length >= 0) {
+    axios.post('comment/create', body)
+      .then(res => {
+        input.value = '';
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
+
+function toggleLike(btn) {
+  const id = btn.parentElement.parentElement.id;
+  const newTitle = document.getElementById(`title-card-${id}`).innerText;
+
+  const thumbIcon = btn.firstElementChild;
+
+  if(thumbIcon.classList.contains('far')) {
+    thumbIcon.classList.remove('far')
+    thumbIcon.classList.add('fas')
+
+    axios.post('/likes/add', {title: newTitle})
+      .then(() => {
+        console.log('liked')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    // const getLikes = Number(btn.innerText.split(' ')[0])
+    // const icon = document.createElement('i');
+    // icon.innerHTML = '';
+    // icon.classList.add('far');
+    // icon.classList.add('fa-thumbs-up')
+
+    // btn.appendChild(icon)
+    // btn.innerText = `${getLikes + 1} Likes`
+
+  } else {
+    thumbIcon.classList.remove('fas')
+    thumbIcon.classList.add('far')
+
+    axios.post('/likes/remove', {title: newTitle})
+      .then(() => {
+        console.log('deleted')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+      // const getLikes = Number(btn.innerText.split(' ')[0])
+      // const icon = document.createElement('i');
+      // icon.innerHTML = '';
+      // icon.classList.add('fas')
+      // icon.classList.add('fa-thumbs-up')
+
+      // btn.appendChild(icon)
+      // btn.innerText = `${getLikes - 1} Likes`
+  }
+}
+
+function showComments(btn) {
+  const id = btn.id.split('-')[1]
+
+  document.getElementById(`comments-section-${id}`).classList.remove('hide')
+  document.getElementById(`comment-form-${id}`).classList.remove('hide')
+
+  btn.classList.add('hide')
+  document.getElementById(`hide-${id}`).classList.remove('hide')
+}
+
+function hideComments(btn) {
+  const id = btn.id.split('-')[1]
+
+  document.getElementById(`comments-section-${id}`).classList.add('hide')
+  document.getElementById(`comment-form-${id}`).classList.add('hide')
+
+  btn.classList.add('hide')
+  document.getElementById(`show-${id}`).classList.remove('hide')
+}
