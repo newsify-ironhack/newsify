@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const newSchema = new Schema({
   owner: {
-    type: Schema.Types.ObjectId, ref: 'User',
+    type: Schema.Types.ObjectId, 
+    ref: 'User',
     required: true
   },
   title: {
@@ -29,10 +30,10 @@ const newSchema = new Schema({
     }
   },
   comments: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    type: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     qty: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0
     }
   },
   location: {

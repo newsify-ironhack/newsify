@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const commentSchema = new Schema({
+const likeSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId, 
     ref: 'User',
@@ -11,15 +11,7 @@ const commentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'New',
     required: true
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now()
   }
-})
+});
 
-module.exports = mongoose.model('Comment', commentSchema)
+module.exports = mongoose.model('Like', likeSchema)
