@@ -53,13 +53,11 @@
 
                   <div id="{{@index}}" class="row like-comment-section">
                     <div class="col s6">
-                      {{!-- {{#each likes}} --}}
-                        {{!-- {{#ifCond this.user "==" user._id}} --}}
-                          <button class="btn social-buttons" onclick="toggleLike(this)"><i class="far fa-thumbs-up"></i>10 likes</button>
-                        {{!-- {{else}} --}}
-                          {{!-- <button class="btn social-buttons"><i class="far fa-thumbs-up" onclick="toggleLike(this)"></i>36 likes</button> --}}
-                        {{!-- {{/ifCond}}   --}}
-                      {{!-- {{/each}}   --}}
+                      {{#if this.liked}}
+                        <button class="btn social-buttons" onclick="toggleLike(this)"><i class="fas fa-thumbs-up"></i><span>{{this.likes.length}} likes</span></button>
+                      {{else}}
+                        <button class="btn social-buttons" onclick="toggleLike(this)"><i class="far fa-thumbs-up"></i><span>{{this.likes.length}} likes</span></button>
+                      {{/if}}  
                     </div>
 
                     <div class="col s6">
@@ -97,8 +95,8 @@
 
                 <div class="row hide" id="comment-form-{{@index}}">
                   <div id="{{@index}}" class="col s12 comment-form">
-                    <input id="comment-input-{{@index}}" type="text">
-                    <button class="btn" onclick="postComment(this)">Send</button>
+                    <input id="comment-input-{{@index}}" type="text" onclick="onSendComment(this)" placeholder="Comment...">
+                    <button id="send-btn-{{@index}}" class="btn" onclick="postComment(this)">Send</button>
                   </div>
                 </div>
               </div>

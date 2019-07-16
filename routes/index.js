@@ -29,17 +29,17 @@ module.exports = function(app, passport,newsapi) {
   }));
 
   app.get('/profile', isLoggedIn, async (req, res) => {
-    News.find({owner: req.user.id}).populate({path: 'comments', populate: {path: 'user'}})
-      .then((allNews) => {
-        if(allNews.likes) {
-          res.render('profile', {allNews, user: req.user, comments: allNews.comments, likes: allNews.likes, likesNum: allNews.likes.length})
-        } else {
-          res.render('profile', {allNews, user: req.user, comments: allNews.comments, likes: [], likesNum: 0})
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    const allNews = await News.find({owner: req.user.id}).populate({path: 'comments', populate: {path: 'user'}})
+
+    allNews.forEach( (art) => {
+      if(art.likes.indexOf(req.user._id) !== -1) {
+        art.liked = true
+      } else {
+        art.liked = false
+      }
+    })
+
+    res.render('profile', {allNews, user: req.user, comments: allNews.comments})
   })
 
   app.get('/trending',(req,res,next)=>{
@@ -143,23 +143,21 @@ module.exports = function(app, passport,newsapi) {
     res.redirect('/');
   });
 
-  app.post('/news/create', (req, res,next) => {
-    News.create({
-      owner: req.user,
-      title: req.body.title,
-      description: req.body.description,
-      picture: req.body.picture,
-      author: req.body.author,
-      articleUrl: req.body.articleUrl,
-      articleDate: req.body.articleDate
-    })
-    .then((response)=>{
-      res.json(response);
-  })
-    .catch((err)=>{
-      res.json(err);
-    })
-    
+  app.post('/news/create', async (req, res,next) => {
+    const { title, description, picture, author, articleUrl, articleDate } = req.body;
+    try {
+      const newArticle = await News.create({ owner: req.user, title, description, picture, author, articleUrl, articleDate });
+
+
+    } catch(err) {
+      console.log(err)
+    }
+  //   .then((response)=>{
+  //     res.json(response);
+  // })
+  //   .catch((err)=>{
+  //     res.json(err);
+  //   })
   })
 
   app.post('/news/delete',(req,res,next)=>{
@@ -182,20 +180,31 @@ module.exports = function(app, passport,newsapi) {
       getNew.comments.push(newComment._id)
       await getNew.save()
 
+      res.json({
+        ok: true,
+        data: {
+          user: req.user,
+          message: 'Comment submitted'
+        }
+      })
+
     } catch(err) {
-      console.log(err)
+      res.json({
+        ok: false,
+        data: 'Something went wrong'
+      })
     }
   });
 
   app.post('/likes/add', async (req, res) => {
     const  { title } = req.body;
     try {
-      const updatedNew = await News.findOne({title})
-      const newLike = await Like.create({ user: req.user._id, article: updatedNew._id })
-
-      updatedNew.likes.push(newLike._id);
-      await updatedNew.save()
-
+      await News.findOneAndUpdate({title}, {$push: {likes: req.user._id}})
+      
+      res.json({
+        ok: true,
+        message: 'Liked'
+      })  
     } catch(err) {
       console.log(err)
     }
@@ -206,9 +215,13 @@ module.exports = function(app, passport,newsapi) {
     const { title } = req.body;
 
     try {
-      const oneNew = await News.findOne({title})
-      const removedLike = await Like.findOneAndRemove({$and: [{user: req.user._id}, {article: oneNew._id}]})
-      const updatedNew = await News.findOneAndUpdate({title}, {$pull: {likes: removedLike._id }})
+      await News.findOneAndUpdate({title}, {$pull: {likes: req.user._id}})
+
+      res.json({
+        ok: true,
+        message: 'Disliked'
+      })
+
     } catch(err) {
       console.log(err)
     }

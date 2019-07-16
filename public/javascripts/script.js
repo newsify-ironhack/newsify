@@ -78,58 +78,109 @@ function toggleBookmark(theCard){
 
 function postComment(button) {
   const id = button.parentElement.id;
-  const newTitle = document.getElementById(`title-card-${id}`).innerText;
   const input = document.getElementById(`comment-input-${id}`)
-  
-  const body  = {
-    title: newTitle,
-    content: input.value
-  }
   if(input.value.length >= 0) {
+    const newTitle = document.getElementById(`title-card-${id}`).innerText;
+    
+    const body  = {
+      title: newTitle,
+      content: input.value
+    }
+  
     axios.post('comment/create', body)
       .then(res => {
-        input.value = '';
+        console.log(res)
+  
+        const user = res.data.data.user
+  
+        const container = document.getElementById(`comments-section-${id}`)
+        const newDiv = document.createElement('div')
+        newDiv.className = ('col s12')
+        newDiv.innerHTML = `<div class="row comment-div">
+          <div class="col s2 center-align">
+            <img class="circle comment-pictures" src="${user.img}" alt="user-img">
+          </div>
+  
+          <div class="col s10 left-align">
+            <div class="row content-section">
+              <div class="col s12">
+                <span class="user-name-span">${user.name}</span>
+                <span>| 4h</span>
+              </div>
+            </div>
+            <div class="row content-section">
+              <div class="col s12">
+                <p>${input.value}</p>
+              </div>
+            </div>
+          </div>
+        </div>`;
+  
+      container.appendChild(newDiv)
+      input.value = ''
       })
       .catch(err => {
         console.log(err)
       })
-  }
+  }  
 }
 
 function toggleLike(btn) {
+  console.log(btn)
   const id = btn.parentElement.parentElement.id;
   const newTitle = document.getElementById(`title-card-${id}`).innerText;
 
   const thumbIcon = btn.firstElementChild;
+  const likesNum = btn.lastChild;
 
   if(thumbIcon.classList.contains('far')) {
     thumbIcon.classList.remove('far')
     thumbIcon.classList.add('fas')
 
     axios.post('/likes/add', {title: newTitle})
-      .then(() => {
-        console.log('liked')
+      .then((res) => {
+        let getLikes = Number(likesNum.innerText.split(' ')[0]);
+        console.log(getLikes)
+        btn.innerHTML = "";
+        const icon = document.createElement('i')
+        icon.className = ('fas fa-thumbs-up')
+
+        const span = document.createElement('span')
+        span.textContent = `${getLikes + 1} likes`
+
+        btn.appendChild(icon)
+        btn.appendChild(span)
+        // btn.innerText = `${getLikes++} likes`
+        // console.log(btn.innerText)
+        // const icon = document.createElement('i');
+        // icon.innerHTML = '';
+        // icon.classList.add('far');
+        // icon.classList.add('fa-thumbs-up')
+    
+        // btn.appendChild(icon)
+        // btn.innerText = `${getLikes + 1} Likes`
       })
       .catch(err => {
         console.log(err)
       })
 
-    // const getLikes = Number(btn.innerText.split(' ')[0])
-    // const icon = document.createElement('i');
-    // icon.innerHTML = '';
-    // icon.classList.add('far');
-    // icon.classList.add('fa-thumbs-up')
-
-    // btn.appendChild(icon)
-    // btn.innerText = `${getLikes + 1} Likes`
 
   } else {
     thumbIcon.classList.remove('fas')
     thumbIcon.classList.add('far')
 
     axios.post('/likes/remove', {title: newTitle})
-      .then(() => {
-        console.log('deleted')
+      .then((res) => {
+        let getLikes = Number(likesNum.innerText.split(' ')[0]);
+        btn.innerHTML = "";
+        const icon = document.createElement('i')
+        icon.className = ('far fa-thumbs-up')
+
+        const span = document.createElement('span')
+        span.textContent = `${getLikes - 1} likes`
+
+        btn.appendChild(icon)
+        btn.appendChild(span)
       })
       .catch(err => {
         console.log(err)
@@ -243,3 +294,14 @@ $(window).scroll(function() {
   }
 });
 
+
+function onSendComment(input) {
+  const id = input.parentElement.id;
+  const btn = document.getElementById(`send-btn-${id}`)
+  input.addEventListener('keyup', function(ev) {
+    console.log(ev)
+    if(ev.keyCode === 13) {
+      postComment(btn)
+    }
+  })
+}
