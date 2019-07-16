@@ -1,0 +1,215 @@
+<section id="profile-view">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 hide-on-med-and-up">
+        <div class="rec-Users">
+          <img class="circle" src={{user.img}}>
+          <div class="rec-Users-info">
+            <a class="nameOfUser" href="/profile/{{user._id}}">
+              <p>{{user.name}}</p>
+            </a>
+            <p class="results-username">@{{user.username}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col m5 l3 hide-on-small-only">
+
+        <div class="row">
+          <div class="col s12 center-align">
+            <img class="circle profile-img" src={{user.img}}>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 center-align">
+            <h5>{{user.name}}</h5>
+            <p>{{user.username}}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s6 center-align">
+            <p>News</p>
+            <span>100</span>
+          </div>
+
+          <div class="col s6 center-align">
+            <p>Followers</p>
+            <span>50</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 center-align">
+            <a class="btn-small black">Follow</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col m12 left-align">
+            <h3 class="tending-title">Trending topics</h3>
+            <ul class="trending-topics">
+              <a href="/trump">
+                <li>#trump</li>
+              </a>
+              <a href="/ironhack">
+                <li>#Ironhack</li>
+              </a>
+              <a href="/2020">
+                <li>#2020</li>
+              </a>
+              <a href="/nba">
+                <li>#NBA</li>
+              </a>
+              <a href="/soccer">
+                <li>#Soccer</li>
+              </a>
+              <a href="/summer">
+                <li>#Summer</li>
+              </a>
+              <a href="/vacation">
+                <li>#Vacation</li>
+              </a>
+              <a href="/election">
+                <li>#Election</li>
+              </a>
+              <a href="/miami">
+                <li>#Miami</li>
+              </a>
+              <a href="/apple">
+                <li>#Apple</li>
+              </a>
+              <a href="/google">
+                <li>#Google</li>
+              </a>
+              <a href="/facebook">
+                <li>#Facebook</li>
+              </a>
+              <a href="/javascript">
+                <li>#Javascript</li>
+              </a>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col s12 m7 l6">
+        <h5>{{user.name}}'s saved news</h5>
+        {{#each allNews}}
+        <div class="row">
+          {{!-- {{> newsPartial}} --}}
+          <div class="col s12">
+            <div class="card newCard">
+              <div class="card-image">
+                <img src="{{this.picture}}">
+              </div>
+              <div class="card-content center-align">
+                <div class="row">
+                  <div class="col s12">
+                    <h5 id="title-card-{{@index}}">{{this.title}}</h5>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <a href="#readmore-modal{{@index}}" class="waves-effect black btn-small modal-trigger">Read more</a>
+                  </div>
+                </div>
+
+                <div id="{{@index}}" class="row like-comment-section">
+                  <div class="col s6">
+                    {{!-- {{#each likes}} --}}
+                    {{!-- {{#ifCond this.user "==" user._id}} --}}
+                    <button class="btn social-buttons" onclick="toggleLike(this)"><i class="far fa-thumbs-up"></i>10
+                      likes</button>
+                    {{!-- {{else}} --}}
+                    {{!-- <button class="btn social-buttons"><i class="far fa-thumbs-up" onclick="toggleLike(this)"></i>36 likes</button> --}}
+                    {{!-- {{/ifCond}}   --}}
+                    {{!-- {{/each}}   --}}
+                  </div>
+
+                  <div class="col s6">
+                    <button class="btn social-buttons" id="show-{{@index}}" onclick="showComments(this)"><i
+                        class="far fa-comment-alt"></i> Comments</button>
+                    <button class="btn social-buttons hide" id="hide-{{@index}}" onclick="hideComments(this)">Hide
+                      comments</button>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row comment-row hide" id="comments-section-{{@index}}">
+                {{#each comments}}
+                <div class="col s12">
+                  <div class="row comment-div">
+                    <div class="col s2 center-align">
+                      <img class="circle comment-pictures" src="{{this.user.img}}" alt="user-img">
+                    </div>
+
+                    <div class="col s10 left-align">
+                      <div class="row content-section">
+                        <div class="col s12">
+                          <span class="user-name-span">{{this.user.name}}</span>
+                          <span>| 4h</span>
+                        </div>
+                      </div>
+                      <div class="row content-section">
+                        <div class="col s12">
+                          <p>{{this.content}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{/each}}
+              </div>
+
+              <div class="row hide" id="comment-form-{{@index}}">
+                <div id="{{@index}}" class="col s12 comment-form">
+                  <input id="comment-input-{{@index}}" type="text">
+                  <button class="btn" onclick="postComment(this)">Send</button>
+                </div>
+              </div>
+            </div>
+            <div id="readmore-modal{{@index}}" class="modal newsmodals" tabindex="0">
+              <div class="modal-content">
+                <div class="center-align">
+                  <h4>{{this.title}}</h4>
+                </div>
+                <hr>
+                <br>
+                <p class="description">{{this.description}}</p>
+                <div class="right-align">
+                  {{#if this.author}}
+                  <h6>By: <span class="author">{{this.author}}</span></h6>
+                  {{/if}}
+                  <h6>Date: <span class="date">{{this.articleDate}}</span></h6>
+                </div>
+                <div class="center-align">
+                  <a class="waves-effect black btn-small link-article" href="{{this.articleUrl}}" target="_blank">
+                    <h6>Link to Article</h6>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="col l3 hide-on-med-and-down">
+        <p>Recommended users</p>
+        {{#each allUsers}}
+        <div class="rec-Users">
+          <img class="circle" src={{this.img}}>
+          <div class="rec-Users-info">
+            <a class="nameOfUser" href="/profile/{{this._id}}">
+              <p>{{this.name}}</p>
+            </a>
+            <p class="results-username">@{{this.username}}</p>
+          </div>
+        </div>
+        {{/each}}
+
+      </div>
+    </div>
+  </div>
+</section>
