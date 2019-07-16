@@ -1,6 +1,7 @@
 const News = require('../models/New');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
+const User = require('../models/User');
 
 module.exports = function(app, passport,newsapi) {
   app.get('/', (req, res, next) => {
@@ -40,6 +41,26 @@ module.exports = function(app, passport,newsapi) {
       .catch(err => {
         console.log(err)
       })
+  })
+  app.get('/profile/:otherUserId', async (req, res,next) => {
+    try {
+      const allNews = await News.find({owner: req.params.otherUserId}).populate({path: 'comments', populate: {path: 'user'}})
+      const user = await User.findById(req.params.otherUserId)
+      let allUsers = 0;
+      if(req.user){
+        allUsers = await User.find({$and: [{_id: {$ne: req.params.otherUserId}},{_id: {$ne: req.user._id}}]}).limit(10);
+        console.log(allUsers);
+
+      }else{
+        allUsers = await User.find({_id: {$ne: req.params.otherUserId}}).limit(10);
+        console.log(allUsers);
+
+      }
+      res.render('other-user-profile', {allNews, user: user, comments: allNews.comments, allUsers: allUsers})
+    } catch(err) {
+      next(err)
+    }
+    
   })
 
   app.get('/trending',(req,res,next)=>{
@@ -91,7 +112,34 @@ module.exports = function(app, passport,newsapi) {
      res.json(err);
      })
   })
-  
+  app.get("/query", (req, res, next) => {
+    let topic = req.query.searchFor;
+    newsapi.v2
+      .everything({ q: `${topic}` })
+      .then(response => {
+        User.find({ $or: [{name: {$regex: `.*${topic}.*`, '$options': `-i`}}, { username: {$regex: `.*${topic}.*`, '$options': `-i`}}] })
+          .then(userResponse => {
+            console.log(userResponse);
+            response.articles.forEach(e => {
+              let date = e.publishedAt;
+              let modifiedDate = date.substring(0, 10);
+              e.publishedAt = modifiedDate;
+            });
+            res.render("news", {
+              allNews: response.articles,
+              topic: `${topic}`,
+              user: req.user,
+              foundUsers: userResponse
+            });
+          })
+          .catch(err => {
+            next(err);
+          });
+      })
+      .catch(err => {
+        next(err);
+      });
+  });
   app.get('/health',(req,res,next)=>{
     newsapi.v2.everything({q: 'health'})
     .then((response) => {
@@ -101,6 +149,48 @@ module.exports = function(app, passport,newsapi) {
         e.publishedAt = modifiedDate;
       })
     res.render('news',{allNews: response.articles, topic: 'Health', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
+  app.get('/politics',(req,res,next)=>{
+    newsapi.v2.everything({q: 'politics'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Politics', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
+  app.get('/lifestyle',(req,res,next)=>{
+    newsapi.v2.everything({q: 'lifestyle'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Lifestyle', user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
+  app.get('/celebrities',(req,res,next)=>{
+    newsapi.v2.everything({q: 'celebrities'})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: 'Celebrities', user: req.user})
   })
   .catch((err)=>{
     next(err);
@@ -213,6 +303,20 @@ module.exports = function(app, passport,newsapi) {
       console.log(err)
     }
   })
+  app.get('/:hashtag',(req,res,next)=>{
+    newsapi.v2.everything({q: `${req.params.hashtag}`})
+    .then((response) => {
+      response.articles.forEach((e)=>{
+        let date = e.publishedAt;
+        let modifiedDate = date.substring(0,10);
+        e.publishedAt = modifiedDate;
+      })
+    res.render('news',{allNews: response.articles, topic: `${req.params.hashtag}`, user: req.user})
+  })
+  .catch((err)=>{
+    next(err);
+    })
+  })
 }
 
 function isLoggedIn(req, res, next) {
@@ -222,6 +326,7 @@ function isLoggedIn(req, res, next) {
       res.redirect('/')
   }
 }
+
 
 
 
