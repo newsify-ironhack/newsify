@@ -348,7 +348,7 @@ span.user-name-span {
   color: white;
 }
 #search{
-  margin-left: 3%;
+  margin-left: 5%;
 }
 #popup-search{
   display: none;
@@ -407,4 +407,47 @@ margin-top: 10px;
   justify-content: center;
   margin-left: 3px;
   overflow-x: scroll;
+}
+.small-img img{
+  width: 80px;
+  border: 1px black solid;
+  margin: 5px 0;
+}
+.hide-if-overflow{
+  overflow-y: hidden;
+}
+.footer{
+  background-color: black;
+  color: white;
+}
+.footer-row{
+  padding-top: 5% !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 5% !important;
+}
+.footer-list{
+  margin-top: 6%;
+}
+.footer-list li{
+  margin: 20px 0;
+}
+.profile-row{
+  margin-bottom: 0px;
+  min-height: 600px;
+}
+.small-profile{
+  border: 1px black solid;
+}
+.small-profile *{
+  padding-right: 4px;
+  padding-left: 4px;
+
+}
+.small-screen{
+  left: 78% !important;
+  top: 64px !important;
+}
+.carousel-item img{
+  height: 200px !important;
+  width: 180px !important;
 }

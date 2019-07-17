@@ -1,48 +1,83 @@
 <section id="profile-view">
   <div class="container">
     <div class="row">
-      <div class="col s12 hide-on-med-and-up">
-        <div class="rec-Users">
-          <img class="circle" src={{user.img}}>
-          <div class="rec-Users-info">
-            <a class="nameOfUser" href="/profile/{{user._id}}">
-              <p>{{user.name}}</p>
+      <div class="col s12 hide-on-med-and-up small-profile">
+        <div class="row valign-wrapper">
+          <div class="col s4 small-img">
+          <img class="circle" src={{otheruser.img}}>
+          </div>
+          <div class="col s4">
+          <div class="rec-Users-info center-align">
+            <a class="nameOfUser" href="/profile/{{otheruser._id}}">
+              <p>{{otheruser.name}}</p>
             </a>
-            <p class="results-username">@{{user.username}}</p>
+            <p class="results-username">@{{otheruser.username}}</p>
+          </div>
+          </div>
+          <div class="col s4">
+            <div class="row">
+          <div class="col s6 center-align">
+            <p>News</p>
+            <span>{{numOfArticles}}</span>
+          </div>
+
+          <div class="col s6 center-align">
+            <p>Followers</p>
+            <span>{{followers}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 center-align">
+            {{#if user}}
+            {{#if isFollowing}}
+            <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small blue follow-btn">Following</a>
+          {{else}}
+          <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small black follow-btn">Follow</a>
+          {{/if}}
+          {{/if}}
+          </div>
+        </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
+      
+    <div class="row profile-row">
       <div class="col m5 l3 hide-on-small-only">
 
         <div class="row">
           <div class="col s12 center-align">
-            <img class="circle profile-img" src={{user.img}}>
+            <img class="circle profile-img" src={{otheruser.img}}>
           </div>
         </div>
 
         <div class="row">
           <div class="col s12 center-align">
-            <h5>{{user.name}}</h5>
-            <p>{{user.username}}</p>
+            <h5>{{otheruser.name}}</h5>
+            <p>@{{otheruser.username}}</p>
           </div>
         </div>
 
         <div class="row">
           <div class="col s6 center-align">
             <p>News</p>
-            <span>100</span>
+            <span>{{numOfArticles}}</span>
           </div>
 
           <div class="col s6 center-align">
             <p>Followers</p>
-            <span>50</span>
+            <span>{{followers}}</span>
           </div>
         </div>
         <div class="row">
           <div class="col s12 center-align">
-            <a class="btn-small black">Follow</a>
+            {{#if user}}
+            {{#if isFollowing}}
+            <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small blue follow-btn">Following</a>
+          {{else}}
+          <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small black follow-btn">Follow</a>
+          {{/if}}
+          {{/if}}
           </div>
         </div>
         <div class="row">
@@ -94,7 +129,8 @@
       </div>
 
       <div class="col s12 m7 l6">
-        <h5>{{user.name}}'s saved news</h5>
+        <h5>{{otheruser.name}}'s saved news</h5>
+        {{#if allNews}}
         {{#each allNews}}
         <div class="row">
           {{!-- {{> newsPartial}} --}}
@@ -119,8 +155,11 @@
                   <div class="col s6">
                     {{!-- {{#each likes}} --}}
                     {{!-- {{#ifCond this.user "==" user._id}} --}}
-                    <button class="btn social-buttons" onclick="toggleLike(this)"><i class="far fa-thumbs-up"></i>10
-                      likes</button>
+                   {{#if this.liked}}
+                        <button class="btn social-buttons hide-if-overflow" onclick="toggleLike(this)"><i class="fas fa-thumbs-up"></i><span>{{this.likes.length}}<span class="hide-if-overflow"> likes</span></span></button>
+                      {{else}}
+                        <button class="btn social-buttons hide-if-overflow" onclick="toggleLike(this)"><i class="far fa-thumbs-up"></i><span>{{this.likes.length}} <span class="hide-if-overflow">likes</span></span></button>
+                      {{/if}}  
                     {{!-- {{else}} --}}
                     {{!-- <button class="btn social-buttons"><i class="far fa-thumbs-up" onclick="toggleLike(this)"></i>36 likes</button> --}}
                     {{!-- {{/ifCond}}   --}}
@@ -128,9 +167,9 @@
                   </div>
 
                   <div class="col s6">
-                    <button class="btn social-buttons" id="show-{{@index}}" onclick="showComments(this)"><i
-                        class="far fa-comment-alt"></i> Comments</button>
-                    <button class="btn social-buttons hide" id="hide-{{@index}}" onclick="hideComments(this)">Hide
+                    <button class="btn social-buttons hide-if-overflow" id="show-{{@index}}" onclick="showComments(this)"><i
+                        class="far fa-comment-alt"></i><span>Comments</span></button>
+                    <button class="btn social-buttons hide hide-if-overflow" id="hide-{{@index}}" onclick="hideComments(this)">Hide
                       comments</button>
                   </div>
                 </div>
@@ -180,6 +219,7 @@
                 <div class="right-align">
                   {{#if this.author}}
                   <h6>By: <span class="author">{{this.author}}</span></h6>
+                  
                   {{/if}}
                   <h6>Date: <span class="date">{{this.articleDate}}</span></h6>
                 </div>
@@ -192,11 +232,15 @@
             </div>
           </div>
         </div>
+        
         {{/each}}
+        {{else}}
+                <h3>Nothing to see here... Check back later!</h3>
+        {{/if}}
       </div>
 
       <div class="col l3 hide-on-med-and-down">
-        <p>Recommended users</p>
+        <p>Users they are following</p>
         {{#each allUsers}}
         <div class="rec-Users">
           <img class="circle" src={{this.img}}>

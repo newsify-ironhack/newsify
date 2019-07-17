@@ -4,17 +4,25 @@
   <h3 class="center-align">User Results</h3>
   <div id="resultsOfUsers" class="row">
     {{#each foundUsers}}
-  <div class="foundUsers-info">
-    <div class="col s2">
-    <img class="circle" src={{this.img}}>
-    </div>
-    <div class="col s6 user-and-name">
-     <a class="nameOfUser" href="/profile/{{this._id}}"><p>{{this.name}}</p></a>
-    <p class="results-username">@{{this.username}}</p>
-    </div>
-    <div class="col s4 valign-wrapper">
-    <a class="follow-userResults btn-small black">Follow</a>
-    </div>
+    <div class="foundUsers-info">
+      <div class="col s2">
+        <img class="circle" src={{this.img}}>
+      </div>
+      <div class="col s6 user-and-name">
+        <a class="nameOfUser" href="/profile/{{this._id}}">
+          <p>{{this.name}}</p>
+        </a>
+        <p class="results-username">@{{this.username}}</p>
+      </div>
+      <div class="col s4 valign-wrapper">
+     {{#if ../user}}
+        {{#if this.isFollowing}}
+        <a id="{{this._id}} {{../user._id}}" onclick="followUser(this)" class="btn-small blue follow-btn">Following</a>
+        {{else}}
+        <a id="{{this._id}} {{../user._id}}" onclick="followUser(this)" class="btn-small black follow-btn">Follow</a>
+        {{/if}}
+     {{/if}}
+      </div>
     </div>
     {{/each}}
   </div>
@@ -25,5 +33,5 @@
     {{> newsPartial user=../user}}
     {{/each}}
   </div>
-  </div>
-  <div class="loader"></div>
+</div>
+<div class="loader"></div>
