@@ -38,6 +38,13 @@ const userSchema = new Schema({
             default: 0
         }
     },
+    followers: {
+        type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        qty: {
+            type: Number,
+            default: 0
+        }
+    },
     linkedin: {
         type: Boolean,
         default: false
