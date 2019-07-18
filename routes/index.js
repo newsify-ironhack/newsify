@@ -100,17 +100,15 @@ module.exports = function(app, passport, newsapi,mongoose) {
   });
 
   app.post('/password/recover/:id', async (req, res, next) => {
-    const { oldPassword, newPassword, newPassword2 } = req.body
+    const { newPassword, newPassword2 } = req.body
     const id = req.params.id;
-
-    console.log(req.body, id)
 
     try {
       const userDB = await User.findById(id)
 
       if(userDB.recover) {
         console.log('There is a recover code')
-        if(userDB.validatePassword(oldPassword) && newPassword === newPassword2) {
+        if(newPassword === newPassword2) {
           userDB.password = userDB.generateHash(newPassword);
           delete userDB.recover;
 
