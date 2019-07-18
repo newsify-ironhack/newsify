@@ -52,5 +52,41 @@
         </div>
       </div>
     </div>
+
+    {{#if wrongEmailAndUsername}}
+      <span class="toast red darken-4">
+        Email and username already taken
+      </span>
+    {{/if}}  
+
+    {{#if wrongUsername}}
+      <span class="toast red darken-4">
+        Username already taken
+      </span>
+    {{/if}}
+
+    {{#if wrongEmail}}
+      <span class="toast red darken-4">
+        Email already taken
+      </span>
+    {{/if}}
+
+    {{#if loginMessage}}
+      <span class="toast red darken-4">
+        {{loginMessage}}
+      </span>
+    {{/if}}
+
+    {{#if error}}
+      <span class="toast red darken-4">
+        {{error}}
+      </span>
+    {{/if}}
+
+    {{#if passSuccess}}
+      <span class="toast green accent-3">
+        Password changed succesfully
+      </span>
+    {{/if}}
   </div>
 </section>
