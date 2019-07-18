@@ -203,8 +203,8 @@
 
               <div class="row hide" id="comment-form-{{@index}}">
                 <div id="{{@index}}" class="col s12 comment-form">
-                  <input id="comment-input-{{@index}}" type="text">
-                  <button class="btn" onclick="postComment(this)">Send</button>
+                  <input id="comment-input-{{@index}}" type="text" onclick="onSendComment(this)">
+                  <button id="send-btn-{{@index}}" class="btn" onclick="postComment(this)">Send</button>
                 </div>
               </div>
             </div>

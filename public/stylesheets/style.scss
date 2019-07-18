@@ -68,7 +68,7 @@ a {
 #about-section{
   background-color: #0079C6;
   padding-top: 5%;
-
+  min-height: 500px !important;
 }
 .about-title{
   display: inline;
@@ -447,7 +447,15 @@ margin-top: 10px;
   left: 78% !important;
   top: 64px !important;
 }
-.carousel-item img{
-  height: 200px !important;
-  width: 180px !important;
+.carousel-item {
+  width:400px !important;
 }
+.carousel{
+  min-height: 700px !important;
+  margin-bottom: 200px !important;
+}
+.top-headlines{
+  color: black;
+  height: 100px;
+}
+

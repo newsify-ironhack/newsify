@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   var collapsElems = document.querySelectorAll('.collapsible');
   var collapseInstances = M.Collapsible.init(collapsElems, {});
   var carouselElems = document.querySelectorAll('.carousel');
-  var instances = M.Carousel.init(carouselElems, {});
-  console.log('test');
+  var caroinstances = M.Carousel.init(carouselElems, {shift: 120});
+
 
   var i = 0;
   var txt = 'Newsify';
@@ -83,7 +83,6 @@ function toggleBookmark(theCard){
 function postComment(button) {
   const id = button.parentElement.id;
   const input = document.getElementById(`comment-input-${id}`)
-  console.log('test');
   if(input.value.length >= 0) {
     const newTitle = document.getElementById(`title-card-${id}`).innerText;
     
@@ -237,7 +236,6 @@ $(window).scroll(function() {
       axios.get(`${axiosLocation}/${page}`)
       .then((response)=>{ 
         let data = response.data.response;
-        console.log(data);
         data.forEach((e,i)=>{
         if(e.urlToImage === null){
           e.urlToImage = '/images/default-article-image.png';
@@ -309,17 +307,14 @@ function onSendComment(input) {
   const id = input.parentElement.id;
   const btn = document.getElementById(`send-btn-${id}`)
   input.addEventListener('keyup', function(ev) {
-    console.log(ev)
     if(ev.keyCode === 13) {
       postComment(btn)
     }
   })
 }
 function followUser(user){
-  console.log(user)
   let bothIds = user.id;
   let arrayIds = bothIds.split(" ");
-  console.log(arrayIds);
   let userToFollow = arrayIds[0];
   let userThatIsFollowing = arrayIds[1];
   axios.post('/follow',{arrayIds})
