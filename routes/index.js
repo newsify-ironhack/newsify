@@ -4,122 +4,206 @@ const Comment = require('../models/Comment');
 const User = require('../models/User');
 const cloudinary = require('../config/cloudinary');
 
-module.exports = function(app, passport,newsapi) {
-  app.get('/', (req, res, next) => {
-    console.log(req.flash())
-    res.render('homepage', {user: req.user});
+module.exports = function(app, passport, newsapi) {
+  app.get("/", (req, res, next) => {
+    console.log(req.flash());
+    newsapi.v2.topHeadlines({ country: "us" })
+    .then((response)=>{
+      res.render("index", { user: req.user, allNews: response.articles});
+    })
+    .catch((err)=>{
+      next(err);
+    })
   });
 
-  app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/profile',
-    failureRedirect: '/',
-    failureFlash: true
-  }))
+  app.post(
+    "/signup",
+    passport.authenticate("local-signup", {
+      successRedirect: "/profile",
+      failureRedirect: "/",
+      failureFlash: true
+    })
+  );
 
-  app.post('/login', passport.authenticate('local-login', {
-    successRedirect: '/profile',
-    failureRedirect: '/',
-    failureFlash: true
-  }))
+  app.post(
+    "/login",
+    passport.authenticate("local-login", {
+      successRedirect: "/profile",
+      failureRedirect: "/",
+      failureFlash: true
+    })
+  );
 
-  app.get('/auth/linkedin', passport.authenticate('linkedin', { state: true }));
+  app.get("/auth/linkedin", passport.authenticate("linkedin", { state: true }));
 
-  app.get('/auth/linkedin/callback', passport.authenticate('linkedin', {
-    successRedirect: '/profile',
-    failureRedirect: '/',
-    failureFlash: true
-  }));
+  app.get(
+    "/auth/linkedin/callback",
+    passport.authenticate("linkedin", {
+      successRedirect: "/profile",
+      failureRedirect: "/",
+      failureFlash: true
+    })
+  );
 
-  app.get('/profile', isLoggedIn, async (req, res) => {
-    const allNews = await News.find({owner: req.user.id}).populate({path: 'comments', populate: {path: 'user'}})
-
-    allNews.forEach( (art) => {
-      if(art.likes.indexOf(req.user._id) !== -1) {
-        art.liked = true
+  app.get("/profile", isLoggedIn, async (req, res) => {
+    let allNews = await News.find({ owner: req.user.id }).populate({
+      path: "comments",
+      populate: { path: "user" }
+    });
+    let x = await User.findById(req.user._id).populate("following");
+    allNews = allNews.reverse();
+    let allUsers = x.following;
+    let numOfArticles = allNews.length;
+    let followers = x.followers.length;
+    allNews.forEach(art => {
+      if (art.likes.indexOf(req.user._id) !== -1) {
+        art.liked = true;
       } else {
-        art.liked = false
+        art.liked = false;
       }
-    })
+    });
 
-    res.render('profile', {allNews, user: req.user, comments: allNews.comments})
-  })
-  app.get('/profile/:otherUserId', async (req, res,next) => {
+    res.render("profile", {
+      allNews,
+      user: req.user,
+      comments: allNews.comments,
+      allUsers: allUsers,
+      numOfArticles: numOfArticles,
+      followers: followers
+    });
+  });
+  app.get("/profile/:otherUserId", async (req, res, next) => {
     try {
-      const allNews = await News.find({owner: req.params.otherUserId}).populate({path: 'comments', populate: {path: 'user'}})
-      const user = await User.findById(req.params.otherUserId)
-      let allUsers = 0;
-      if(req.user){
-        allUsers = await User.find({$and: [{_id: {$ne: req.params.otherUserId}},{_id: {$ne: req.user._id}}]}).limit(10);
-        console.log(allUsers);
-
-      }else{
-        allUsers = await User.find({_id: {$ne: req.params.otherUserId}}).limit(10);
-        console.log(allUsers);
-
+      let allNews = await News.find({ owner: req.params.otherUserId }).populate(
+        { path: "comments", populate: { path: "user" } }
+      );
+      const user = await User.findById(req.params.otherUserId);
+      allNews = allNews.reverse();
+      let isFollowing = false;
+      let x = await User.findById(req.params.otherUserId).populate("following");
+      let allUsers = x.following;
+      let numOfArticles = allNews.length;
+      let followers = user.followers.length;
+      
+      if (req.user) {
+        allUsers.forEach((e, i) => {
+          if (e._id.equals(req.user._id)) {
+            allUsers.splice(i, 1);
+          }
+        });
+        allNews.forEach(art => {
+          if (art.likes.indexOf(req.user._id) !== -1) {
+            art.liked = true;
+          } else {
+            art.liked = false;
+          }
+        });
+        if (req.user.following.includes(req.params.otherUserId)) {
+          isFollowing = true;
+        }
       }
-      res.render('other-user-profile', {allNews, user: user, comments: allNews.comments, allUsers: allUsers})
-    } catch(err) {
-      next(err)
+      res.render("other-user-profile", {
+        allNews,
+        otheruser: user,
+        comments: allNews.comments,
+        allUsers: allUsers,
+        user: req.user,
+        isFollowing: isFollowing,
+        numOfArticles: numOfArticles,
+        followers: followers
+      });
+    } catch (err) {
+      next(err);
     }
-    
-  })
+  });
 
-  app.get('/trending',(req,res,next)=>{
-    newsapi.v2.topHeadlines({country: 'us'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+  app.get("/trending", (req, res, next) => {
+    newsapi.v2
+      .topHeadlines({ country: "us" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Trending",
+          user: req.user
+        });
       })
-    res.render('news',{allNews: response.articles, topic: 'Trending', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/trending/:page',(req,res,next)=>{
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/trending/:page", (req, res, next) => {
     let pageToFind = Number(req.params.page);
-    newsapi.v2.topHeadlines({country: 'us', page: pageToFind})
-    .then((response) => {
-     res.json({response: response.articles, user: req.user});
-  })
-  .catch((err)=>{
-    res.json(err);
-    })
-  })
-  app.get('/sports',(req,res,next)=>{
-    newsapi.v2.everything({q: 'sports'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+    newsapi.v2
+      .topHeadlines({ country: "us", page: pageToFind })
+      .then(response => {
+        res.json({ response: response.articles, user: req.user });
       })
-    res.render('news',{allNews: response.articles, topic: 'Sports', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/:topic/:page',(req,res,next)=>{
+      .catch(err => {
+        res.json(err);
+      });
+  });
+  app.get("/sports", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "sports" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Sports",
+          user: req.user
+        });
+      })
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/:topic/:page", (req, res, next) => {
     let pageToFind = Number(req.params.page);
     let topic = req.params.topic;
-    newsapi.v2.everything({q: topic, page: pageToFind})
-    .then((response) => {
-      res.json({response: response.articles, user: req.user});
-   })
-   .catch((err)=>{
-     res.json(err);
-     })
-  })
+    newsapi.v2
+      .everything({ q: topic, page: pageToFind })
+      .then(response => {
+        res.json({ response: response.articles, user: req.user });
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
   app.get("/query", (req, res, next) => {
     let topic = req.query.searchFor;
     newsapi.v2
       .everything({ q: `${topic}` })
       .then(response => {
-        User.find({ $or: [{name: {$regex: `.*${topic}.*`, '$options': `-i`}}, { username: {$regex: `.*${topic}.*`, '$options': `-i`}}] })
+        User.find({
+          $or: [
+            { name: { $regex: `.*${topic}.*`, $options: `-i` } },
+            { username: { $regex: `.*${topic}.*`, $options: `-i` } }
+          ]
+        })
           .then(userResponse => {
+            if (req.user) {
+              userResponse.forEach((e, i) => {
+                if (req.user.following.includes(e._id)) {
+                  e.isFollowing = true;
+                }
+                // }
+              });
+              userResponse.forEach((e, i) => {
+                if (e._id.equals(req.user._id)) {
+                  userResponse.splice(i, 1);
+                }
+                // }
+              });
+            }
             console.log(userResponse);
             response.articles.forEach(e => {
               let date = e.publishedAt;
@@ -141,196 +225,326 @@ module.exports = function(app, passport,newsapi) {
         next(err);
       });
   });
-  app.get('/health',(req,res,next)=>{
-    newsapi.v2.everything({q: 'health'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+  app.get("/health", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "health" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Health",
+          user: req.user
+        });
       })
-    res.render('news',{allNews: response.articles, topic: 'Health', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/politics',(req,res,next)=>{
-    newsapi.v2.everything({q: 'politics'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/politics", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "politics" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Politics",
+          user: req.user
+        });
       })
-    res.render('news',{allNews: response.articles, topic: 'Politics', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/lifestyle',(req,res,next)=>{
-    newsapi.v2.everything({q: 'lifestyle'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/lifestyle", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "lifestyle" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Lifestyle",
+          user: req.user
+        });
       })
-    res.render('news',{allNews: response.articles, topic: 'Lifestyle', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/celebrities',(req,res,next)=>{
-    newsapi.v2.everything({q: 'celebrities'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/celebrities", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "celebrities" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Celebrities",
+          user: req.user
+        });
       })
-    res.render('news',{allNews: response.articles, topic: 'Celebrities', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/tech',(req,res,next)=>{
-    newsapi.v2.everything({q: 'technology'})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/tech", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "technology" })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Tech",
+          user: req.user
+        });
       })
-    res.render('news',{allNews: response.articles, topic: 'Tech', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-  })
-  app.get('/music',(req,res,next)=>{
-    newsapi.v2.everything({q: 'music'})
-    .then((response) => {
-      console.log(response);
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+      .catch(err => {
+        next(err);
+      });
+  });
+  app.get("/music", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: "music" })
+      .then(response => {
+        console.log(response);
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        console.log(req.user);
+        res.render("news", {
+          allNews: response.articles,
+          topic: "Music",
+          user: req.user
+        });
       })
-    console.log(req.user);
-    res.render('news',{allNews: response.articles, topic: 'Music', user: req.user})
-  })
-  .catch((err)=>{
-    next(err);
-    })
-    
-  })
-  
-  app.get('/logout', (req, res) => {
+      .catch(err => {
+        next(err);
+      });
+  });
+
+  app.get("/logout", (req, res) => {
     req.logout();
-    res.redirect('/');
+    res.redirect("/");
   });
 
-  app.post('/news/create', async (req, res,next) => {
-    const { title, description, picture, author, articleUrl, articleDate } = req.body;
+  app.post("/news/create", async (req, res, next) => {
+    const {
+      title,
+      description,
+      picture,
+      author,
+      articleUrl,
+      articleDate
+    } = req.body;
     try {
-      const newArticle = await News.create({ owner: req.user, title, description, picture, author, articleUrl, articleDate });
-
-
-    } catch(err) {
-      console.log(err)
+      const newArticle = await News.create({
+        owner: req.user,
+        title,
+        description,
+        picture,
+        author,
+        articleUrl,
+        articleDate
+      });
+    } catch (err) {
+      console.log(err);
     }
-  //   .then((response)=>{
-  //     res.json(response);
-  // })
-  //   .catch((err)=>{
-  //     res.json(err);
-  //   })
-  })
-
-  app.post('/news/delete',(req,res,next)=>{
-    News.findOneAndRemove({title: req.body.title})
-    .then((response)=>{
-      res.json(response);
-    })
-    .catch((err)=>{
-      res.json(err);
-    })
+    //   .then((response)=>{
+    //     res.json(response);
+    // })
+    //   .catch((err)=>{
+    //     res.json(err);
+    //   })
   });
 
-  app.post('/comment/create', async (req, res) => {
+  app.post("/news/delete", (req, res, next) => {
+    News.findOneAndRemove({ title: req.body.title })
+      .then(response => {
+        res.json(response);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+
+  app.post("/comment/create", async (req, res) => {
     const { title, content } = req.body;
 
     try {
-      const getNew = await News.findOne({title})
-      const newComment = await Comment.create({user: req.user._id, article: getNew._id, content})
+      const getNew = await News.findOne({ title });
+      const newComment = await Comment.create({
+        user: req.user._id,
+        article: getNew._id,
+        content
+      });
 
-      getNew.comments.push(newComment._id)
-      await getNew.save()
+      getNew.comments.push(newComment._id);
+      await getNew.save();
 
       res.json({
         ok: true,
         data: {
           user: req.user,
-          message: 'Comment submitted'
+          message: "Comment submitted"
         }
-      })
-
-    } catch(err) {
+      });
+    } catch (err) {
       res.json({
         ok: false,
-        data: 'Something went wrong'
-      })
+        data: "Something went wrong"
+      });
     }
   });
 
-  app.post('/likes/add', async (req, res) => {
-    const  { title } = req.body;
+  app.post("/likes/add", async (req, res) => {
+    const { title } = req.body;
     try {
-      await News.findOneAndUpdate({title}, {$push: {likes: req.user._id}})
-      
+      await News.findOneAndUpdate(
+        { title },
+        { $push: { likes: req.user._id } }
+      );
+
       res.json({
         ok: true,
-        message: 'Liked'
-      })  
-    } catch(err) {
-      console.log(err)
+        message: "Liked"
+      });
+    } catch (err) {
+      console.log(err);
     }
+  });
 
-  })
-
-  app.post('/likes/remove', async (req, res) => {
+  app.post("/likes/remove", async (req, res) => {
     const { title } = req.body;
 
     try {
-      await News.findOneAndUpdate({title}, {$pull: {likes: req.user._id}})
+      await News.findOneAndUpdate(
+        { title },
+        { $pull: { likes: req.user._id } }
+      );
 
       res.json({
         ok: true,
-        message: 'Disliked'
-      })
-
-    } catch(err) {
-      console.log(err)
+        message: "Disliked"
+      });
+    } catch (err) {
+      console.log(err);
     }
-  })
-  app.get('/:hashtag',(req,res,next)=>{
-    newsapi.v2.everything({q: `${req.params.hashtag}`})
-    .then((response) => {
-      response.articles.forEach((e)=>{
-        let date = e.publishedAt;
-        let modifiedDate = date.substring(0,10);
-        e.publishedAt = modifiedDate;
+  });
+  app.post("/follow", (req, res, next) => {
+    console.log("============================== ", req.body);
+    const personToFollow = req.body.arrayIds[0];
+    const personThatIsFollowing = req.body.arrayIds[1];
+    User.findById(personToFollow)
+      .then(person => {
+        if (!req.user.following.includes(person._id)) {
+          req.user.following.push(person._id);
+          req.user
+            .save()
+            .then(response => {
+              if (person.follwers) {
+                person.followers.push(req.user._id);
+              } else {
+                person.followers = [];
+                person.followers.push(req.user._id);
+              }
+              person
+                .save()
+                .then(saveBoth => {
+                  next();
+                })
+                .catch(err => {
+                  console.log(err);
+
+                  next(err);
+                });
+            })
+            .catch(err => {
+              console.log(err);
+
+              next(err);
+            });
+        } else {
+          req.user.following.pull(person._id);
+          req.user
+            .save()
+            .then(response => {
+              person.followers.pull(req.user._id);
+              person
+                .save()
+                .then(saveBoth => {
+                  next();
+                })
+                .catch(err => {
+                  console.log(err);
+                  next(err);
+                });
+            })
+            .catch(err => {
+              console.log(err);
+              next(err);
+            });
+        }
       })
-    res.render('news',{allNews: response.articles, topic: `${req.params.hashtag}`, user: req.user})
+      .catch(err => {
+        console.log(err);
+        next(err);
+      });
+
+    //   console.log(userID);
+    //   if(!userID) {
+
+    //     await User.findByIdAndUpdate(personToFollow,{$push: {followers: personThatIsFollowing}})
+    //     await User.findByIdAndUpdate(personThatIsFollowing,{$push: {following: personToFollow}})
+
+    //   }
+    //   res.json({
+    //     ok: true,
+    //     message: 'followed'
+    //   })
+    // } catch(err){
+    //   console.log(err);
+    // }
+  });
+  app.get("/:hashtag", (req, res, next) => {
+    newsapi.v2
+      .everything({ q: `${req.params.hashtag}` })
+      .then(response => {
+        response.articles.forEach(e => {
+          let date = e.publishedAt;
+          let modifiedDate = date.substring(0, 10);
+          e.publishedAt = modifiedDate;
+        });
+        res.render("news", {
+          allNews: response.articles,
+          topic: `${req.params.hashtag}`,
+          user: req.user
+        });
+      })
+      .catch(err => {
+        next(err)
+      })
   })
-  .catch((err)=>{
-    next(err);
-    })
-  })
+
 
   app.post('/profile/edit', async (req, res) => {
     const { name, username } = req.body;
@@ -373,12 +587,8 @@ module.exports = function(app, passport,newsapi) {
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
-      return next();
+    return next();
   } else {
-      res.redirect('/')
+    res.redirect("/");
   }
 }
-
-
-
-

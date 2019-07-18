@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   var collapsElems = document.querySelectorAll('.collapsible');
   var collapseInstances = M.Collapsible.init(collapsElems, {});
+  var carouselElems = document.querySelectorAll('.carousel');
+  var instances = M.Carousel.init(carouselElems, {});
   console.log('test');
 
   var i = 0;
@@ -83,6 +85,7 @@ function toggleBookmark(theCard){
 function postComment(button) {
   const id = button.parentElement.id;
   const input = document.getElementById(`comment-input-${id}`)
+  console.log('test');
   if(input.value.length >= 0) {
     const newTitle = document.getElementById(`title-card-${id}`).innerText;
     
@@ -91,7 +94,7 @@ function postComment(button) {
       content: input.value
     }
   
-    axios.post('comment/create', body)
+    axios.post('/comment/create', body)
       .then(res => {
         console.log(res)
   
@@ -316,9 +319,34 @@ function onSendComment(input) {
     }
   })
 }
+function followUser(user){
+  console.log(user)
+  let bothIds = user.id;
+  let arrayIds = bothIds.split(" ");
+  console.log(arrayIds);
+  let userToFollow = arrayIds[0];
+  let userThatIsFollowing = arrayIds[1];
+  axios.post('/follow',{arrayIds})
+  .then((response)=>{
+    console.log(response);
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+  if($(user).hasClass('black')){
+  $(user).removeClass('black').addClass('blue');
+  $(user).text('Following');
+}else{
+  $(user).removeClass('blue').addClass('black');
+  $(user).text('Follow');
+}
+}
+
+
 $("#toggle-search").click(function(){
   $("#popup-search").css("display","block")
 });
+
 $(document).mouseup(function(e) 
 {
     var container = $("#popup-search");

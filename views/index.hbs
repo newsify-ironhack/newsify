@@ -12,6 +12,20 @@
     </div>
   </div>
 </section>
+<section class="top-headliens-today">
+<h2 class="center-align">Top Headlines Today</h2>
+  <div class="carousel">
+    {{#each allNews}}
+    <a class="carousel-item" href="#{{@index}}!"><img src="{{this.urlToImage}}">
+    
+    <p>{{this.title}}</p>
+    </a>
+    
+    {{/each}}
+    
+  </div>
+      
+</section>
 <section id="about-section">
   <div class="nav-container">
     <div class="row valign-wrapper">

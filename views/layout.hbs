@@ -8,7 +8,8 @@
   <title>{{title}}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/css?family=Germania+One&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
@@ -26,21 +27,21 @@
             <li class="topic"><a href="/trending">Trending</a></li>
             <li class="topic"><a href="/tech">Tech</a></li>
             <li class="topic"><a href="/sports">Sports</a></li>
-            <li><a class='dropdown-trigger' href='' data-target='dropdown-more-options'>More</a></li>     
-             <ul id='dropdown-more-options' class='dropdown-content more-options'>
-                <li class="topic"><a href="/music">Music</a></li>
-                <li class="topic"><a href="/health">Health</a></li>
-                <li class="topic"><a href="/politics">Politics</a></li>
-                <li class="topic"><a href="/lifestyle">Lifestyle</a></li>
-                <li class="topic"><a href="/celebrities">Celebrities</a></li>
-             </ul>       
+            <li><a class='dropdown-trigger' href='' data-target='dropdown-more-options'>More</a></li>
+            <ul id='dropdown-more-options' class='dropdown-content more-options'>
+              <li class="topic"><a href="/music">Music</a></li>
+              <li class="topic"><a href="/health">Health</a></li>
+              <li class="topic"><a href="/politics">Politics</a></li>
+              <li class="topic"><a href="/lifestyle">Lifestyle</a></li>
+              <li class="topic"><a href="/celebrities">Celebrities</a></li>
+            </ul>
             <li class="topic"><a id="toggle-search"><i class="material-icons">search</i></a></li>
             <li><a class='dropdown-trigger' href='' data-target='dropdown1'><i id="profile-icon"
                   class="material-icons">person</i></a></li>
             <ul id='dropdown1' class='dropdown-content'>
               {{#if user}}
               <li><a href="/profile">Profile</a></li>
-              <li><a href="/logout">Log out</a></li>   
+              <li><a href="/logout">Log out</a></li>
               {{else}}
               <li><a class="modal-trigger" href="#signup-modal">Sign up</a></li>
               <li><a class="modal-trigger" href="#login-modal">Log in</a></li>
@@ -48,28 +49,67 @@
             </ul>
           </ul>
         </div>
-        <div class="show-on-small s1">
-          <span>user</span>
+        <div class="hide-on-med-and-up s1">
+           <a class='dropdown-trigger' href='' data-target='dropdown2'><i class="fas fa-bars"></i></a> 
         </div>
+        <ul id='dropdown2' class='dropdown-content small-screen'>
+              <li><a href="/trending">Trending</a></li>
+              <li><a href="/sports">Sports</a></li>
+              <li><a href="/music">Music</a></li>
+              <li><a href="/health">Health</a></li>
+              <li><a href="/lifestyle">Lifestyle</a></li>
+              <li><a href="/politics">Politics</a></li>
+             {{#if user}}
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/logout">Log out</a></li>
+              {{else}}
+              <li><a class="modal-trigger" href="#signup-modal">Sign up</a></li>
+              <li><a class="modal-trigger" href="#login-modal">Log in</a></li>
+              {{/if}}
+            </ul>
       </div>
     </div>
   </nav>
   <div id="popup-search">
     <form action="/query" method="GET">
-        <div class="input-field">
-          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-          <input name="searchFor" id="search" type="search" required>
-          <i class="material-icons">close</i>
-        </div>
-      </form>
+      <div class="input-field">
+        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+        <input name="searchFor" id="search" type="search" required>
+        <i class="material-icons">close</i>
+      </div>
+    </form>
   </div>
   {{{body}}}
   <div id="login-modal" class="modal">
-        {{> loginPartial}}
+    {{> loginPartial}}
   </div>
   <div id="signup-modal" class="modal">
     {{> signupPartial}}
   </div>
+<footer class="footer">
+  <div class="container">
+    <div class="row footer-row">
+      <div class="col s4">
+        <ul class="footer-list">
+          <li>Contact Us</li>
+          <li>Become an Editor</li>
+          <li>Contribute</li>
+          <li>Careers</li>
+          <li>Privacy & Terms</li>
+          <li>Submit Feedback</li>
+        </ul>
+      </div>
+      <div class="col s8 center-align">
+        <h4>Powered by: NewsApi.org&reg</h4>
+        <h5>Created by: Sergio & Sergui</h5>
+        <h5>Check us out on GitHub <span><img src="/images/GitHub-Mark-Light-32px.png"></span></h5>
+        <h6><a href="https://github.com/sergiovelo17" target="_blank">Sergio</a> | <a href="https://github.com/sergui20" target="_blank">Sergui</a></h6>
+        <h5>and LinkedIn <i class="fab fa-linkedin"></i></h5>
+        <h6><a href="https://www.linkedin.com/in/svelikopoljski/" target="_blank">Sergio</a> | <a href="https://www.linkedin.com/in/serguimc/" target="_blank">Sergui</a></h6>
+      </div>
+    </div>
+  </div>
+</footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
