@@ -1,0 +1,37 @@
+<section>
+  <div class="container">
+    {{#if verified}}
+      <div class="row">
+        <div class="col s12 center-align">
+          <h3>Enter the verification code</h3>
+        </div>
+      </div>
+
+      <div class="row">
+        <form class="col s12" action="/password/confirm-code/{{userID}}" method="POST">
+
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="code" type="number" name="tempCode">
+              <label for="code">Code</label>
+            </div>
+          </div>
+
+          <button class="btn">Submit</button>
+        </form>
+      </div>
+    {{else}}
+      <div class="row">
+        <div class="col s12 center-align">
+          <h3>You are not allowed</h3>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+
+  {{#if passErr}}
+    <span class="toast red darken-4">
+      The code is incorrect
+    </span>
+  {{/if}}  
+</section>

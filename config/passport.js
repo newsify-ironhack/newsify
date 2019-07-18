@@ -1,6 +1,7 @@
 const LocalStrategy = require('passport-local');
 const User = require('../models/User');
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+const nodemailer = require('./nodemailer');
 
 module.exports = function(passport) {
     passport.serializeUser(function (user, done) {
@@ -42,9 +43,21 @@ module.exports = function(passport) {
                 newUser.email = email;
                 newUser.password = newUser.generateHash(password);
               
-                await newUser.save()
-                return done(null, newUser)
+                await newUser.save();
 
+                nodemailer.sendMail({
+                    from: 'Newsify DONOTREPLY',
+                    to: newUser.email,
+                    subject: 'Your email has been used to signup to Newsify',
+                    html: `<div><h2>Welcome to Newsify</h2><p>Thank you ${newUser.name}. Enjoy seeing news !</div>`
+                })
+                .then(res => {
+                    console.log(res)
+                    return done(null, newUser)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             }
         
         } catch(err) {
@@ -97,8 +110,22 @@ module.exports = function(passport) {
                 newUser.img = profile.photos[0].value
                 newUser.linkedin = true;
 
+                nodemailer.sendMail({
+                    from: 'Newsify DONOTREPLY',
+                    to: newUser.email,
+                    subject: 'Your email has been used to signup to Newsify',
+                    html: `<div><h2>Welcome to Newsify</h2><p>Thank you ${newUser.name}. Enjoy seeing news !</div>`
+                })
+
                 await newUser.save()
-                return done(null, newUser)
+
+                .then(res => {
+                    console.log(res)
+                    return done(null, newUser)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             }
 
         } catch(err) {
