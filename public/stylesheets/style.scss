@@ -68,7 +68,7 @@ a {
 #about-section{
   background-color: #0079C6;
   padding-top: 5%;
-
+  min-height: 500px !important;
 }
 .about-title{
   display: inline;
@@ -198,9 +198,9 @@ color: black;
   margin: 0 3%;
 }
 .bottom-container{
-  position: relative;
-    top:-1px;
-  width: 100%;
+  position: relative !important;
+    top:-1px !important;
+  width: 100% !important;
 }
 .default-image{
   height: 50%;
@@ -364,6 +364,7 @@ margin-bottom: 10px;
   width: 50px;
   border: 1px black solid;
   margin: 5px 0;
+  height: 50px;
 }
 .user-and-name{
   align-self: center
@@ -399,6 +400,7 @@ margin-top: 10px;
   width: 30px;
   border: 1px black solid;
   margin: 5px 0;
+  height: 30px;
 }
 .rec-Users-info{
   display: flex;
@@ -458,6 +460,7 @@ p#title-webcam {
   width: 80px;
   border: 1px black solid;
   margin: 5px 0;
+  height: 80px !important;
 }  
 .hide-if-overflow{
   overflow-y: hidden;
@@ -493,10 +496,33 @@ p#title-webcam {
   left: 78% !important;
   top: 64px !important;
 }
-.carousel-item img{
-  height: 200px !important;
-  width: 180px !important;
+.carousel-item {
+  width:400px !important;
 }
+.carousel{
+  min-height: 700px !important;
+  margin-bottom: 200px !important;
+}
+.top-headlines{
+  color: black;
+  height: 100px;
+}
+.delete-button{
+  position: absolute;
+  right: 5%;
+  top: 5%;
+}
+.delete-button i{
+  font-size: 20px !important;
+  color: red;
+}
+.delete-comment{
+  color:red;
+}
+// .carousel-item img{
+//   height: 200px !important;
+//   width: 180px !important;
+// }
 
 .toast {
   position: absolute;

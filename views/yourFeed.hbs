@@ -1,137 +1,26 @@
-<section id="profile-view">
-  <div class="container">
-    <div class="row">
-      <div class="col s12 hide-on-med-and-up small-profile">
-        <div class="row valign-wrapper">
-          <div class="col s4 small-img">
-          <img class="circle" src={{otheruser.img}}>
-          </div>
-          <div class="col s4">
-          <div class="rec-Users-info center-align">
-            <a class="nameOfUser" href="/profile/{{otheruser._id}}">
-              <p>{{otheruser.name}}</p>
-            </a>
-            <p class="results-username">@{{otheruser.username}}</p>
-          </div>
-          </div>
-          <div class="col s4">
-            <div class="row">
-          <div class="col s6 center-align">
-            <p>News</p>
-            <span>{{numOfArticles}}</span>
-          </div>
+<div class="container">
+  <div class="row">
 
-          <div class="col s6 center-align">
-            <p>Followers</p>
-            <span>{{followers}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s12 center-align">
-            {{#if user}}
-            {{#if isFollowing}}
-            <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small blue follow-btn">Following</a>
-          {{else}}
-          <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small black follow-btn">Follow</a>
-          {{/if}}
-          {{/if}}
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-      
-    <div class="row profile-row">
-      <div class="col m5 l3 hide-on-small-only">
-
-        <div class="row">
-          <div class="col s12 center-align">
-            <img class="circle profile-img" src={{otheruser.img}}>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col s12 center-align">
-            <h5>{{otheruser.name}}</h5>
-            <p>@{{otheruser.username}}</p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col s6 center-align">
-            <p>News</p>
-            <span>{{numOfArticles}}</span>
-          </div>
-
-          <div class="col s6 center-align">
-            <p>Followers</p>
-            <span>{{followers}}</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s12 center-align">
-            {{#if user}}
-            {{#if isFollowing}}
-            <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small blue follow-btn">Following</a>
-          {{else}}
-          <a id="{{otheruser._id}} {{user._id}}" onclick="followUser(this)" class="btn-small black follow-btn">Follow</a>
-          {{/if}}
-          {{/if}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col m12 left-align">
-            <h3 class="tending-title">Trending topics</h3>
-            <ul class="trending-topics">
-              <a href="/trump">
-                <li>#trump</li>
-              </a>
-              <a href="/ironhack">
-                <li>#Ironhack</li>
-              </a>
-              <a href="/2020">
-                <li>#2020</li>
-              </a>
-              <a href="/nba">
-                <li>#NBA</li>
-              </a>
-              <a href="/soccer">
-                <li>#Soccer</li>
-              </a>
-              <a href="/summer">
-                <li>#Summer</li>
-              </a>
-              <a href="/vacation">
-                <li>#Vacation</li>
-              </a>
-              <a href="/election">
-                <li>#Election</li>
-              </a>
-              <a href="/miami">
-                <li>#Miami</li>
-              </a>
-              <a href="/apple">
-                <li>#Apple</li>
-              </a>
-              <a href="/google">
-                <li>#Google</li>
-              </a>
-              <a href="/facebook">
-                <li>#Facebook</li>
-              </a>
-              <a href="/javascript">
-                <li>#Javascript</li>
-              </a>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="col s12 m7 l6">
-        <h5>{{otheruser.name}}'s saved news</h5>
+ 
+<div class="col s12">
+        <h2>Your feed</h2>
         {{#if allNews}}
         {{#each allNews}}
+        <div class="col s12 small-profile">
+        <div class="row valign-wrapper">
+          <div class="col s4 small-img">
+            <img class="circle" src={{this.userImage}}>
+          </div>
+          <div class="col s4">
+            <div class="rec-Users-info center-align">
+              <a class="nameOfUser" href="/profile/{{this.owner}}">
+                <p>{{this.userName}}</p>
+              </a>
+              <p class="results-username">@{{this.userUserName}}</p>
+            </div>
+          </div>
+          </div>
+        </div>
         <div class="row">
           {{!-- {{> newsPartial}} --}}
           <div class="col s12">
@@ -243,22 +132,5 @@
                 <h3>Nothing to see here... Check back later!</h3>
         {{/if}}
       </div>
-
-      <div class="col l3 hide-on-med-and-down">
-        <p>Users they are following</p>
-        {{#each allUsers}}
-        <div class="rec-Users">
-          <img class="circle" src={{this.img}}>
-          <div class="rec-Users-info">
-            <a class="nameOfUser" href="/profile/{{this._id}}">
-              <p>{{this.name}}</p>
-            </a>
-            <p class="results-username">@{{this.username}}</p>
-          </div>
-        </div>
-        {{/each}}
-
-      </div>
-    </div>
-  </div>
-</section>
+       </div>
+</div>

@@ -12,6 +12,7 @@ const session      = require('express-session');
 const passport     = require('passport');
 const flash        = require('connect-flash');
 const NewsAPI = require('newsapi');
+const HandlebarsIntl = require('handlebars-intl');
 const newsapi = new NewsAPI(process.env.NEWSAPISECRETKEY);
 
 
@@ -24,7 +25,7 @@ mongoose
   .catch(err => {
     console.error('Error connecting to mongo', err)
   });
-
+  mongoose.set('useFindAndModify', false);
 const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
@@ -44,7 +45,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash())
-
+HandlebarsIntl.registerWith(hbs);
 // Passport config
 require('./config/passport')(passport);
 
@@ -89,6 +90,6 @@ hbs.registerHelper('ifCond', function (v1, operator, v2, options) {
   }
 });
 
-require('./routes/index')(app,passport,newsapi);
+require('./routes/index')(app,passport,newsapi,mongoose);
 
 module.exports = app;
