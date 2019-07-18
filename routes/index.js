@@ -1,7 +1,8 @@
 const News = require('../models/New');
 const Comment = require('../models/Comment');
-const Like = require('../models/Like');
+// const Like = require('../models/Like');
 const User = require('../models/User');
+const cloudinary = require('../config/cloudinary');
 
 module.exports = function(app, passport,newsapi) {
   app.get('/', (req, res, next) => {
@@ -329,6 +330,44 @@ module.exports = function(app, passport,newsapi) {
   .catch((err)=>{
     next(err);
     })
+  })
+
+  app.post('/profile/edit', async (req, res) => {
+    const { name, username } = req.body;
+    let body = {
+      name,
+      username
+    }
+
+    if(req.body.webcamImg) {
+      cloudinary.v2.uploader.upload(`data:image/jpeg;base64,${req.body.webcamImg.replace(/(\r\n|\n|\r)/gm,"")}`, {
+          overwrite: true,
+          invalidate: true,
+          width: 810, 
+          height: 456, 
+          crop: "fill"
+      },async function(error, result) {
+        if(error) {
+          next(error)
+        }
+  
+        await User.findByIdAndUpdate(req.user._id, {...body, img: result.url});
+        res.redirect('/profile')
+      });
+    } else if(req.body.fileImg){
+      cloudinary.v2.uploader.upload(req.body.fileImg, async function(error, result) {
+        if(error) {
+          next(error)
+        }
+        
+        await User.findByIdAndUpdate(req.user._id, {...body, img: result.url});
+        res.redirect('/profile')
+      });
+    } else {
+      console.log('hey')
+      await User.findByIdAndUpdate(req.user._id, body)
+      res.redirect('/profile')
+    }
   })
 }
 

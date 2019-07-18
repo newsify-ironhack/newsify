@@ -370,4 +370,42 @@ span.user-name-span {
   margin-left: 3px;
   overflow-x: scroll; }
 
+#edit-profile-modal {
+  min-height: 90%;
+  top: 5% !important; }
+
+#modal-edit-footer {
+  position: absolute;
+  bottom: 0; }
+
+.no-margin {
+  margin: 0; }
+
+.webcam-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+  width: 100% !important; }
+
+p#title-webcam {
+  position: absolute;
+  text-align: center;
+  font-size: 20px;
+  color: #bdbdbd;
+  font-weight: 900;
+  left: 40%;
+  top: 45%; }
+
+.hide {
+  display: none; }
+
+.no-borders {
+  border: none; }
+
+.webcam-row {
+  position: relative;
+  border: 2px dashed #bdbdbd;
+  cursor: pointer; }
+
 /*# sourceMappingURL=style.css.map */

@@ -27,7 +27,15 @@
             <span>50</span>
           </div>
         </div>
+
+        <div class="row" fullname="{{user.name}}" username="{{user.username}}" email="{{user.email}}">
+          <div class="col s12 center-align">
+            <a class="btn-small black modal-trigger" href="#edit-profile-modal" onclick="populateForm(this)">Edit Profile</a>
+          </div>
+        </div>
+
       </div>
+
 
       <div class="col s6">
         <h5>Your saved news</h5>
@@ -128,6 +136,96 @@
 
       <div class="col s3">
         <p>Recommended users</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-profile-modal" class="modal">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h4>Edit your profile</h4>
+        </div>
+      </div>
+      <div class="row">
+        <form action="/profile/edit" method="POST" class="col s12" id="edit-form-modal">
+          <div class="row no-margin">
+            <div class="input-field col s12">
+              <input id="name" type="text" name="name" class="validate">
+              <label id="name-label" for="name">Name</label>
+              <span class="helper-text" data-error="Name is required"></span>
+            </div>
+          </div>
+
+          <div class="row no-margin">
+            <div class="input-field col s12">
+              <input id="username" type="text" name="username" class="validate">
+              <label id="username-label" for="username">Username</label>
+            </div>
+          </div>
+
+          {{#unless user.linkedin}}
+            <div class="row no-margin">
+              <div class="input-field col s12">
+                <input id="email" type="email" name="email" class="validate">
+                <label id="email-label" for="email">Email</label>
+                <span class="helper-text" data-error="Email is required"></span>
+              </div>
+            </div>
+          {{/unless}}  
+
+          {{!-- {{#if user.password}}
+            <div class="row no-margin">
+              <div class="input-field col s12">
+                <input id="password" type="password" name="password" class="validate">
+                <label id="password-label" for="password">Password</label>
+              </div>
+            </div>
+          {{/if}} --}}
+
+          <div id="file-row" class="row">
+            <div class="file-field input-field col s12">
+              <div class="btn">
+                <span>File</span>
+                <input id="fake-input" type="file" accept="image/png, image/jpeg image/jpg" value="a">
+              </div>
+              <div class="file-path-wrapper">
+                <input id="text-filename" class="file-path validate" type="text" onchange="getFilename()">
+              </div>
+            </div>
+          </div>
+
+          <input id="webcamImg" type="hidden" name="webcamImg" value="" />
+          <input id="fileImg" type="hidden" name="fileImg" value="" />
+
+          <div id="webcam-row" class="row webcam-row" onclick="initializeWebcam(this)">
+            <p class="s" id="title-webcam">Or take a picture</p>
+            <div class="col s12 webcam-container" id="webcam-container">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer" id="modal-edit-footer">
+      <div class="row no-margin">
+        <div class="col s6 center-align">
+
+          <div class="hide" id="snap-cancel-btn">
+            <button class="btn" onclick="freezeCamera()"><i class="fas fa-camera"></i> Snap</button>
+            <button class="btn red darken-4" onclick="shutdownCamera()"><i class="fas fa-window-close"></i> Shuwtdown</button>
+          </div>
+
+          <div class="hide" id="retake-cancel-btn">
+            <button class="btn" onclick="unfreezeCamera()"><i class="fas fa-redo-alt"></i> Retake</button>
+            <button class="btn red darken-4" onclick="shutdownCamera()"><i class="fas fa-window-close"></i> Shutdown</button>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <button onclick="updateProfile()" class="btn">Save profile</button>
+          <a href="#!" class="modal-close waves-effect waves-green btn">Cancel</a>
+          {{!-- <a href="#!" class="modal-close waves-effect waves-green btn">Save</a> --}}
+        </div>
       </div>
     </div>
   </div>
