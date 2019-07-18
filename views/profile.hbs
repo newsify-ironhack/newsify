@@ -26,11 +26,6 @@
                 <span>{{followers}}</span>
               </div>
             </div>
-            <div class="row">
-              <div class="col s12 center-align">
-                <a class="btn-small black modal-trigger" href="#edit-profile-modal">Edit</a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -68,9 +63,9 @@
             <span>{{followers}}</span>
           </div>
         </div>
-        <div class="row">
+        <div class="row" fullname="{{user.name}}" username="{{user.username}}" email="{{user.email}}">
           <div class="col s12 center-align">
-            <a class="btn-small black">Edit</a>
+            <a class="btn-small black modal-trigger" href="#edit-profile-modal" onclick="populateForm(this)">Edit Profile</a>
           </div>
         </div>
         <div class="row">
@@ -119,13 +114,6 @@
             </ul>
           </div>
         </div>
-
-        <div class="row" fullname="{{user.name}}" username="{{user.username}}" email="{{user.email}}">
-          <div class="col s12 center-align">
-            <a class="btn-small black modal-trigger" href="#edit-profile-modal" onclick="populateForm(this)">Edit Profile</a>
-          </div>
-        </div>
-
       </div>
 
       <div class="col s12 m7 l6">
@@ -277,7 +265,7 @@
             </div>
           </div>
 
-          {{#unless user.linkedin}}
+          {{!-- {{#unless user.linkedin}}
             <div class="row no-margin">
               <div class="input-field col s12">
                 <input id="email" type="email" name="email" class="validate">
@@ -285,7 +273,7 @@
                 <span class="helper-text" data-error="Email is required"></span>
               </div>
             </div>
-          {{/unless}}  
+          {{/unless}}   --}}
 
           {{!-- {{#if user.password}}
             <div class="row no-margin">
