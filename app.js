@@ -90,6 +90,6 @@ hbs.registerHelper('ifCond', function (v1, operator, v2, options) {
   }
 });
 
-require('./routes/index')(app,passport,newsapi);
+require('./routes/index')(app,passport,newsapi,mongoose);
 
 module.exports = app;

@@ -4,7 +4,7 @@ const Comment = require('../models/Comment');
 const User = require('../models/User');
 const cloudinary = require('../config/cloudinary');
 
-module.exports = function(app, passport, newsapi) {
+module.exports = function(app, passport, newsapi,mongoose) {
   app.get("/", (req, res, next) => {
     console.log(req.flash());
     newsapi.v2.topHeadlines({ country: "us" })
@@ -433,15 +433,47 @@ module.exports = function(app, passport, newsapi) {
   });
   app.get("/checkfeed",async(req,res,next)=>{
     try{
-      let peopleFollowing = await User.find({followers: {$in: [req.user._id]}});
-      console.log(peopleFollowing);
-      let allNews = await News.find().sort({createdAt: -1}).populate("owner").populate({
+      let allNews = [];
+      const me = await User.findById(req.user._id);
+      let people = me.following;
+      let allUsers = await User.find()
+      let news = await News.find().populate({
         path: "comments",
-        populate: { path: "user" }
-      }).limit(50);
+        populate: { path: "user" },
+      })
+     news.forEach((eachNews)=>{
+       people.forEach((ePerson)=>{
+         if(eachNews.owner.equals(ePerson)){
+           allNews.push(eachNews);
+         }
+       })
+     })
+     allNews.forEach((eachNews)=>{
+       allUsers.forEach((ePerson)=>{
+         if(eachNews.owner.equals(ePerson._id)){
+           eachNews.userImage = ePerson.img;
+           eachNews.userName = ePerson.name;
+           eachNews.userUserName = ePerson.username;
+         }
+       })
+     })
+      // let sorted = allNews.sort((a,b)=>{
+      //   if(a.createdAt > b.createdAt){
+      //     return -1;
+      //   }
+      //   if(a.createdAt < b.createdAt){
+      //     return 1;
+      //   }
+      //   return 0;
+      // })
+      // console.log(allNews);
+      // let allNews = await News.find().sort({createdAt: -1}).populate("owner").populate({
+      //   path: "comments",
+      //   populate: { path: "user" }
+      // }).limit(50);
       
-      console.log(allNews);
-      res.render('yourFeed',{allNews: newsToShow, user: req.user, comments: allNews.comments})
+      // console.log(allNews);
+      res.render('yourFeed',{allNews: allNews, user: req.user, comments: allNews.comments})
     }catch(err){
       console.log(err);
     }
