@@ -6,10 +6,18 @@ const cloudinary = require('../config/cloudinary');
 
 module.exports = function(app, passport, newsapi) {
   app.get("/", (req, res, next) => {
-    console.log(req.flash());
     newsapi.v2.topHeadlines({ country: "us" })
-    .then((response)=>{
-      res.render("index", { user: req.user, allNews: response.articles});
+      .then((response)=>{
+        res.render("index", { 
+          user: req.user, 
+          allNews: response.articles, 
+          wrongEmailAndUsername: req.flash('wrongEmailAndUsername')[0],
+          wrongUsername: req.flash('wrongUsername')[0],
+          wrongEmail: req.flash('wrongEmail')[0],
+          loginMessage: req.flash('loginMessage')[0],
+          error: req.flash('error')[0]
+        }
+      );
     })
     .catch((err)=>{
       next(err);

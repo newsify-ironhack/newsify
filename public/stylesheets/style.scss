@@ -497,3 +497,29 @@ p#title-webcam {
   height: 200px !important;
   width: 180px !important;
 }
+
+.toast {
+  position: absolute;
+  visibility: hidden;
+  animation: slideUp;
+  right: 40px;
+  animation-duration: 2s;
+}
+
+@keyframes slideUp {
+  0% {
+    visibility: visible;
+    top: 100%;
+  }
+
+  15% {
+    visibility: visible;
+    top: 6%;
+  }
+
+  100% {
+    visibility: visible;
+    top: 6%;
+  }
+}
+
