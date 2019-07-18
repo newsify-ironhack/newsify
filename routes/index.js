@@ -3,6 +3,7 @@ const Comment = require('../models/Comment');
 // const Like = require('../models/Like');
 const User = require('../models/User');
 const cloudinary = require('../config/cloudinary');
+const nodemailer = require('../config/nodemailer');
 
 module.exports = function(app, passport, newsapi) {
   app.get("/", (req, res, next) => {
@@ -15,6 +16,7 @@ module.exports = function(app, passport, newsapi) {
           wrongUsername: req.flash('wrongUsername')[0],
           wrongEmail: req.flash('wrongEmail')[0],
           loginMessage: req.flash('loginMessage')[0],
+          passSuccess: req.flash('passSuccess')[0],
           error: req.flash('error')[0]
         }
       );
@@ -80,6 +82,129 @@ module.exports = function(app, passport, newsapi) {
       followers: followers
     });
   });
+
+  app.get('/password/recover/:id', async(req, res, next) => {
+    const id = req.params.id;
+
+    try {
+      const userDB = await User.findById(id)
+
+      if(userDB.recover) {
+        res.render("passRecoverForm", {userID: userDB._id, validPass: true, passErr: req.flash('passErr')[0]})
+      } else {
+        res.redirect('/')
+      }
+    } catch(err) {
+      next(err)
+    }
+  });
+
+  app.post('/password/recover/:id', async (req, res, next) => {
+    const { oldPassword, newPassword, newPassword2 } = req.body
+    const id = req.params.id;
+
+    console.log(req.body, id)
+
+    try {
+      const userDB = await User.findById(id)
+
+      if(userDB.recover) {
+        console.log('There is a recover code')
+        if(userDB.validatePassword(oldPassword) && newPassword === newPassword2) {
+          userDB.password = userDB.generateHash(newPassword);
+          delete userDB.recover;
+
+          await userDB.save();
+          console.log('Password changed !')
+          req.flash('passSuccess', true)
+          res.redirect('/')
+        } else {
+          console.log('Passwords do not match')
+          req.flash('passErr', 'Passwords do not match')
+          res.redirect(`/password/recover/${userDB._id}`)
+        }
+      } else {
+        res.redirect('/')
+      }
+
+    } catch(err) {
+      next(err)
+    }
+  })
+
+  app.get('/password/confirm-code/:id', async (req, res, next) => {
+    const id = req.params.id;
+    try {
+      const userDB = await User.findById(id);
+
+      if(userDB.recover) {
+        res.render("confirmCode", {userID: userDB._id, verified: true, codeErr: req.flash('codeErr')[0]});
+      } else {
+        res.redirect('/')
+      }
+    } catch(err) {
+      next(err)
+    }
+  });
+
+  app.post('/password/confirm-code/:id', async (req, res, next) => {
+    const id = req.params.id;
+    const code = req.body.tempCode;
+
+    try {
+      const userDB = await User.findById(id)
+
+      if(userDB) {
+        if(userDB.recover === code) {
+          res.redirect(`/password/recover/${userDB._id}`, {verified: true, userID: userDB._id})
+        } else {
+          req.flash('codeErr', 'The code do not match')
+          res.redirect(`/password/recover/${userDB._id}`)
+        }
+      } else {
+        res.redirect('/')
+      }
+    } catch(err) {
+      next(err)
+    }
+  })
+
+  app.get('/password/confirm-email', (req, res) => {
+    res.render("confirmEmailForm")
+  });
+
+  app.post('/password/confirm-email', async (req, res, next) => {
+    const { email } = req.body; 
+    try {
+      const userDB = await User.findOne({email})
+
+      if(userDB) {
+        if(!userDB.linkedin) {
+          const code = Math.floor(1000 + Math.random() * 9000);
+  
+          nodemailer.sendMail({
+            from: 'Newsify DONOTREPLY',
+            to: userDB.email,
+            subject: 'Password recover',
+            html: `<div><h2>Change your password</h2><p>Use ${code} for changin your password</p></div>`
+          })
+            .then(async response => {
+              userDB.recover = code;
+              await userDB.save()
+              res.redirect(`/password/confirm-code/${userDB._id}`)
+            })
+            .catch(err => {
+              next(err)
+            })
+        } else {
+          res.redirect('/')
+        }
+      }
+    } catch(err) {
+      next(err)
+    }
+  })
+
   app.get("/profile/:otherUserId", async (req, res, next) => {
     try {
       let allNews = await News.find({ owner: req.params.otherUserId }).populate(
@@ -590,7 +715,7 @@ module.exports = function(app, passport, newsapi) {
       await User.findByIdAndUpdate(req.user._id, body)
       res.redirect('/profile')
     }
-  })
+  });
 }
 
 function isLoggedIn(req, res, next) {

@@ -48,6 +48,9 @@ const userSchema = new Schema({
     linkedin: {
         type: Boolean,
         default: false
+    },
+    recover: {
+        type: Number
     }
 })
 

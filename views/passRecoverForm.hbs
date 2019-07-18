@@ -1,0 +1,63 @@
+<section>
+  <div class="container">
+  {{#if validPass}}
+      <div class="row">
+        <div class="col s12 center-align">
+          <h3>Recover your password</h3>
+        </div>
+      </div>
+
+      <div class="row">
+        <form class="col s12" action="/password/recover/{{userID}}" method="POST">
+
+          <div class="row">
+            <div class="input-field col s12">
+              <input id="oldPassword" type="password" name="oldPassword">
+              <label for="oldPassword">Old Password</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12">
+              {{#if passErr}}
+                <input id="newPassword" type="password" name="newPassword" class="validate invalid">
+                <label for="newPassword">New Password</label>
+                <span class="helper-text" data-error="Passwords do not match"></span>
+              {{else}}
+                <input id="newPassword" type="password" name="newPassword" class="validate">
+                <label for="newPassword">New Password</label>
+              {{/if}}  
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s12">
+              {{#if passErr}}
+                <input id="newPassword2" type="password" name="newPassword2" class="validate invalid">
+                <label for="newPassword2">Confirm Password</label>
+                <span class="helper-text" data-error="Passwords do not match"></span>
+              {{else}}
+                <input id="newPassword2" type="password" name="newPassword2" class="validate">
+                <label for="newPassword2">Confirm Password</label>
+              {{/if}}
+            </div>
+          </div>
+
+          <button class="btn">Submit</button>
+        </form>
+      </div>
+  {{else}}
+    <div class="row">
+      <div class="col s12 center-align">
+        <h3>Your are not allowed</h3>
+      </div>
+    </div>  
+  </div>
+  {{/if}}
+
+  {{#if passErr}}
+    <span class="toast red darken-4">
+      Passwords do not match
+    </span>
+  {{/if}}  
+</section>
