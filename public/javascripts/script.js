@@ -2,7 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   var elems = document.querySelectorAll('.dropdown-trigger');
   var instances = M.Dropdown.init(elems);
   var modalElems = document.querySelectorAll('.modal');
-  var modalInstances = M.Modal.init(modalElems,{});
+  var modalInstances = M.Modal.init(modalElems,{
+    dismissible: true
+  });
   var collapsElems = document.querySelectorAll('.collapsible');
   var collapseInstances = M.Collapsible.init(collapsElems, {});
   var carouselElems = document.querySelectorAll('.carousel');
@@ -292,7 +294,9 @@ $(window).scroll(function() {
       }
         })
         modalElems = document.querySelectorAll('.modal');
-        modalInstances = M.Modal.init(modalElems,{});
+        modalInstances = M.Modal.init(modalElems,{
+          dismissible: true
+        });
         $('.loader').css('display','none');
       })
       .catch((err)=>{
@@ -349,5 +353,123 @@ $(document).mouseup(function(e)
     }
 });
 
-  
+function initializeWebcam(div) {
+  document.getElementById('title-webcam').classList.add('hide');
+  document.getElementById('file-row').classList.add('hide');
+  div.classList.add('no-borders');
+  document.getElementById('snap-cancel-btn').classList.remove('hide')
 
+  Webcam.set({
+    width: 320,
+		height: 240,
+		image_format: 'jpeg',
+    jpeg_quality: 90,
+		force_flash: false,
+		fps: 45
+	});
+
+  Webcam.attach('#webcam-container');
+}
+
+function freezeCamera() {
+  Webcam.freeze();
+ 
+  document.getElementById('webcam-container').lastChild.classList.add('hide')
+  document.getElementById('snap-cancel-btn').classList.add('hide')
+  document.getElementById('retake-cancel-btn').classList.remove('hide')
+}
+
+function unfreezeCamera () {
+  Webcam.unfreeze();
+
+  document.getElementById('webcam-container').lastChild.classList.remove('hide')
+  document.getElementById('snap-cancel-btn').classList.remove('hide')
+  document.getElementById('retake-cancel-btn').classList.add('hide')
+}
+
+function shutdownCamera() {
+  document.getElementById('snap-cancel-btn').classList.add('hide')
+  document.getElementById('retake-cancel-btn').classList.add('hide')
+  document.getElementById('title-webcam').classList.remove('hide')
+  document.getElementById('file-row').classList.remove('hide');
+
+  Webcam.reset()
+}
+
+function getFilename() {
+  const filename = document.getElementById('text-filename').value
+  
+  if(filename) {
+    document.getElementById('webcam-row').classList.add('hide')
+  } else {
+    document.getElementById('webcam-row').classList.remove('hide')
+  }
+}
+
+function updateProfile() {
+  const name = document.getElementById('name');
+  const email = document.getElementById('email');
+
+  if(email) {
+    if(!name.value || !email.value) {
+      name.classList.add('invalid')
+      email.classList.add('invalid')
+    }
+  } else {
+    if(!name.value) {
+      name.classList.add('invalid')
+    }
+  }
+
+  const onWebcam = document.getElementById('file-row').classList.contains('hide')
+
+  if(onWebcam) {
+    Webcam.snap(function(data_uri) {
+      var raw_image_data = data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
+      
+      document.getElementById('webcamImg').value = raw_image_data;
+      document.getElementById('edit-form-modal').submit();
+    } );
+  } else {
+      const fileImg = document.getElementById('fileImg');
+      const fakeInput = document.getElementById('fake-input');
+      // console.log(fakeInput.files[0])
+      if(fakeInput.files[0]) {
+        var reader = new FileReader();
+        reader.readAsDataURL(fakeInput.files[0]);
+        reader.onload = function () {
+          fileImg.value = reader.result;
+          document.getElementById('edit-form-modal').submit();        
+        };
+        reader.onerror = function (error) {
+          console.log('Error: ', error);
+        };
+      } else {
+        document.getElementById('edit-form-modal').submit();
+      }
+  }
+} 
+
+function populateForm(el) {
+  const credentials = el.parentElement.parentElement
+
+  const name = credentials.getAttribute('fullname')
+  const email = credentials.getAttribute('email')
+  const username = credentials.getAttribute('username')
+  
+  const inputName = document.getElementById('name')
+  inputName.value = name;
+  document.getElementById('name-label').classList.add('active')
+  
+  if(username) {
+    const inputUsername = document.getElementById('username')
+    inputUsername.value = username;
+    document.getElementById('username-label').classList.add('active')
+  }
+
+  if(email) {
+    const inputEmail = document.getElementById('email')
+    inputEmail.value = email;
+    document.getElementById('email-label').classList.add('active')
+  }
+}
