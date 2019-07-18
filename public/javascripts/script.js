@@ -81,11 +81,15 @@ function toggleBookmark(theCard){
   }, 1000)
 
 }
+var rtf1 = new Intl.RelativeTimeFormat('en', { style: 'narrow' });
 
 function postComment(button) {
+  console.log(button);
   const id = button.parentElement.id;
   const input = document.getElementById(`comment-input-${id}`)
-  if(input.value.length >= 0) {
+  input.blur()
+
+  if(input.value.length > 0) {
     const newTitle = document.getElementById(`title-card-${id}`).innerText;
     
     const body  = {
@@ -96,13 +100,13 @@ function postComment(button) {
     axios.post('/comment/create', body)
       .then(res => {
         console.log(res)
-  
+        const commentId = res.data.data.commentId;
         const user = res.data.data.user
   
         const container = document.getElementById(`comments-section-${id}`)
         const newDiv = document.createElement('div')
         newDiv.className = ('col s12')
-        newDiv.innerHTML = `<div class="row comment-div">
+        newDiv.innerHTML = `<div id="whole-comment-${commentId}" class="row comment-div">
           <div class="col s2 center-align">
             <img class="circle comment-pictures" src="${user.img}" alt="user-img">
           </div>
@@ -111,12 +115,15 @@ function postComment(button) {
             <div class="row content-section">
               <div class="col s12">
                 <span class="user-name-span">${user.name}</span>
-                <span>| 4h</span>
+                <span>| Just now</span>
               </div>
             </div>
             <div class="row content-section">
-              <div class="col s12">
+              <div class="col s10">
                 <p>${input.value}</p>
+              </div>
+              <div class="col s2">
+              <a class="delete-comment" id="${commentId}" onclick="deleteComment(this)"><i class="fas fa-trash"></i></a>
               </div>
             </div>
           </div>
@@ -305,16 +312,18 @@ $(window).scroll(function() {
     }
   }
 });
-
+function checkComment(e){
+  
+}
 
 function onSendComment(input) {
   const id = input.parentElement.id;
   const btn = document.getElementById(`send-btn-${id}`)
-  input.addEventListener('keyup', function(ev) {
+  input.onkeyup = function(ev) {
     if(ev.keyCode === 13) {
       postComment(btn)
     }
-  })
+  }
 }
 function followUser(user){
   let bothIds = user.id;
@@ -449,6 +458,35 @@ function updateProfile() {
       }
   }
 } 
+function deleteFromProfile(deleteThis){
+  console.log(deleteThis);
+  let id = $(deleteThis).attr('id')
+  let number = id.substring(7);
+  let titleContent = $(`#title-card-${number}`).html();
+  console.log(titleContent);
+  axios.post('/news/delete',{title: titleContent})
+  .then((response)=>{
+    $(`#card-${number}`).remove();
+    console.log(response);
+    location.reload();
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
+
+function deleteComment(content){
+  console.log(content);
+  let id = $(content).attr('id')
+  axios.post('/comment/delete',{id: id})
+  .then((response)=>{
+    document.getElementById(`whole-comment-${id}`).classList.add('hide');
+    console.log(response);
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
 
 function populateForm(el) {
   const credentials = el.parentElement.parentElement

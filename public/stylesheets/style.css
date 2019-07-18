@@ -178,9 +178,9 @@ a {
   margin: 0 3%; }
 
 .bottom-container {
-  position: relative;
-  top: -1px;
-  width: 100%; }
+  position: relative !important;
+  top: -1px !important;
+  width: 100% !important; }
 
 .default-image {
   height: 50%;
@@ -326,7 +326,8 @@ span.user-name-span {
 .foundUsers-info img {
   width: 50px;
   border: 1px black solid;
-  margin: 5px 0; }
+  margin: 5px 0;
+  height: 50px; }
 
 .user-and-name {
   align-self: center; }
@@ -361,7 +362,8 @@ span.user-name-span {
 .rec-Users img {
   width: 30px;
   border: 1px black solid;
-  margin: 5px 0; }
+  margin: 5px 0;
+  height: 30px; }
 
 .rec-Users-info {
   display: flex;
@@ -412,7 +414,8 @@ p#title-webcam {
 .small-img img {
   width: 80px;
   border: 1px black solid;
-  margin: 5px 0; }
+  margin: 5px 0;
+  height: 80px !important; }
 
 .hide-if-overflow {
   overflow-y: hidden; }
@@ -457,5 +460,17 @@ p#title-webcam {
 .top-headlines {
   color: black;
   height: 100px; }
+
+.delete-button {
+  position: absolute;
+  right: 5%;
+  top: 5%; }
+
+.delete-button i {
+  font-size: 20px !important;
+  color: red; }
+
+.delete-comment {
+  color: red; }
 
 /*# sourceMappingURL=style.css.map */

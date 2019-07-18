@@ -116,16 +116,17 @@
         </div>
       </div>
 
-      <div class="col s12 m7 l6">
+      <div id="profile-content" class="col s12 m7 l6">
         <h5>Your saved news</h5>
         {{#if allNews}}
         {{#each allNews}}
         <div class="row">
           {{!-- {{> newsPartial}} --}}
           <div class="col s12">
-            <div class="card newCard">
+            <div id="card-{{@index}} "class="card newCard">
               <div class="card-image">
                 <img src="{{this.picture}}">
+                <a class="delete-button" id="delete-{{@index}}" onclick="deleteFromProfile(this)"><i class="fas fa-trash"></i></a>
               </div>
               <div class="card-content center-align">
                 <div class="row">
@@ -162,7 +163,7 @@
               <div class="row comment-row hide" id="comments-section-{{@index}}">
                 {{#each comments}}
                 <div class="col s12">
-                  <div class="row comment-div">
+                  <div id="whole-comment-{{this.id}}" class="row comment-div">
                     <div class="col s2 center-align">
                       <img class="circle comment-pictures" src="{{this.user.img}}" alt="user-img">
                     </div>
@@ -171,12 +172,15 @@
                       <div class="row content-section">
                         <div class="col s12">
                           <span class="user-name-span">{{this.user.name}}</span>
-                          <span>| 4h</span>
+                          <span>| {{formatRelative this.createdAt}}</span>
                         </div>
                       </div>
                       <div class="row content-section">
-                        <div class="col s12">
+                        <div class="col s10">
                           <p>{{this.content}}</p>
+                        </div>
+                        <div class="col s2">
+                          <a class="delete-comment" id="{{this.id}}" onclick="deleteComment(this)"><i class="fas fa-trash"></i></a>
                         </div>
                       </div>
                     </div>
@@ -236,7 +240,7 @@
           </div>
         </div>
         {{/each}}
-
+      <a href="/checkfeed" class="btn black">Check your feed</a>
       </div>
     </div>
   </div>
@@ -321,7 +325,7 @@
             <button class="btn red darken-4" onclick="shutdownCamera()"><i class="fas fa-window-close"></i> Shutdown</button>
           </div>
         </div>
-
+        
         <div class="col s6">
           <button onclick="updateProfile()" class="btn">Save profile</button>
           <a href="#!" class="modal-close waves-effect waves-green btn">Cancel</a>

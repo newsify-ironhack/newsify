@@ -97,6 +97,11 @@ module.exports = function(app, passport, newsapi) {
           } else {
             art.liked = false;
           }
+        art.comments.forEach((eComment)=>{
+          if(eComment.user.equals(req.user._id)){
+            eComment.isMine = true;
+          }
+        })
         });
         if (req.user.following.includes(req.params.otherUserId)) {
           isFollowing = true;
@@ -366,6 +371,7 @@ module.exports = function(app, passport, newsapi) {
         articleUrl,
         articleDate
       });
+      await User.findByIdAndUpdate(req.user._id, {$push: {news: newArticle._id}})
     } catch (err) {
       console.log(err);
     }
@@ -378,9 +384,18 @@ module.exports = function(app, passport, newsapi) {
   });
 
   app.post("/news/delete", (req, res, next) => {
-    News.findOneAndRemove({ title: req.body.title })
+    console.log(req.body.title, req.user._id);
+    News.findOneAndRemove({$and: [{title: req.body.title },{owner: req.user._id}]})
       .then(response => {
-        res.json(response);
+        // console.log(response);
+        User.findByIdAndUpdate(req.user._id, {$pull: {news: response._id}})
+        .then((response)=>{
+          console.log(response);
+          res.json(response);
+        })
+        .catch((err)=>{
+          res.json(err);
+        })
       })
       .catch(err => {
         res.json(err);
@@ -400,10 +415,11 @@ module.exports = function(app, passport, newsapi) {
 
       getNew.comments.push(newComment._id);
       await getNew.save();
-
+      console.log(newComment.createdAt)
       res.json({
         ok: true,
         data: {
+          commentId: newComment._id,
           user: req.user,
           message: "Comment submitted"
         }
@@ -415,6 +431,39 @@ module.exports = function(app, passport, newsapi) {
       });
     }
   });
+  app.get("/checkfeed",async(req,res,next)=>{
+    try{
+      let peopleFollowing = await User.find({followers: {$in: [req.user._id]}});
+      console.log(peopleFollowing);
+      let allNews = await News.find().sort({createdAt: -1}).populate("owner").populate({
+        path: "comments",
+        populate: { path: "user" }
+      }).limit(50);
+      
+      console.log(allNews);
+      res.render('yourFeed',{allNews: newsToShow, user: req.user, comments: allNews.comments})
+    }catch(err){
+      console.log(err);
+    }
+  })
+  app.post("/comment/delete", async (req,res,next)=>{
+    const id = req.body.id;
+    try{
+      const comment = await Comment.findByIdAndDelete(id);
+      let articleId = comment.article;
+      console.log(articleId)
+      const newArticle = await News.findByIdAndUpdate(articleId, {$pull: {comments: id}})
+      console.log(newArticle);
+      res.json({
+        ok: true
+      })
+    }catch (err) {
+      res.json({
+        ok: false,
+        data: "Something went wrong"
+      });
+    }
+  })
 
   app.post("/likes/add", async (req, res) => {
     const { title } = req.body;
