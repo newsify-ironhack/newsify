@@ -79,7 +79,8 @@ module.exports = function(app, passport, newsapi,mongoose) {
       comments: allNews.comments,
       allUsers: allUsers,
       numOfArticles: numOfArticles,
-      followers: followers
+      followers: followers,
+      artErr: req.flash("artErr")[0]
     });
   });
 
@@ -184,7 +185,7 @@ module.exports = function(app, passport, newsapi,mongoose) {
             from: 'Newsify DONOTREPLY',
             to: userDB.email,
             subject: 'Password recover',
-            html: `<div><h2>Change your password</h2><p>Use ${code} for changin your password</p></div>`
+            html: `<div><h2>Change your password</h2><p>Use this ${code} for changing your password</p></div>`
           })
             .then(async response => {
               userDB.recover = code;
@@ -265,7 +266,7 @@ module.exports = function(app, passport, newsapi,mongoose) {
         res.render("news", {
           allNews: response.articles,
           topic: "Trending",
-          user: req.user
+          user: req.user,
         });
       })
       .catch(err => {
@@ -493,16 +494,22 @@ module.exports = function(app, passport, newsapi,mongoose) {
       articleDate
     } = req.body;
     try {
-      const newArticle = await News.create({
-        owner: req.user,
-        title,
-        description,
-        picture,
-        author,
-        articleUrl,
-        articleDate
-      });
-      await User.findByIdAndUpdate(req.user._id, {$push: {news: newArticle._id}})
+      const article = await News.findOne({$and: [{title}, {owner: req.user._id}]})
+      if(article) {
+        req.flash('artErr', 'Article already saved');
+        res.end()
+      } else {
+        const newArticle = await News.create({
+          owner: req.user,
+          title,
+          description,
+          picture,
+          author,
+          articleUrl,
+          articleDate
+        });
+        await User.findByIdAndUpdate(req.user._id, {$push: {news: newArticle._id}})
+      }
     } catch (err) {
       console.log(err);
     }
@@ -581,12 +588,26 @@ module.exports = function(app, passport, newsapi,mongoose) {
      })
      allNews.forEach((eachNews)=>{
        allUsers.forEach((ePerson)=>{
+         if(eachNews.likes.includes(req.user._id)){
+           eachNews.liked = true;
+         }
          if(eachNews.owner.equals(ePerson._id)){
            eachNews.userImage = ePerson.img;
            eachNews.userName = ePerson.name;
            eachNews.userUserName = ePerson.username;
          }
        })
+       eachNews.comments.forEach((eComment)=>{
+         if(eComment.user){
+
+           if(eComment.user._id.equals(req.user._id)){
+             eComment.isMine = true;
+           }
+         }
+        // if(eComment.user._id.equals(req.user._id)){
+        //   eComment.isMine = true;
+        // }
+      })
      })
       // let sorted = allNews.sort((a,b)=>{
       //   if(a.createdAt > b.createdAt){
