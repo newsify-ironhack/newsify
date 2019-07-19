@@ -18,7 +18,7 @@ const newsapi = new NewsAPI(process.env.NEWSAPISECRETKEY);
 
 
 mongoose
-  .connect(`mongodb://${process.env.USERDBNAME}:${process.env.USERDBPASS}@ds351987.mlab.com:51987/newsify`, {useNewUrlParser: true})
+  .connect('mongodb://localhost/newsify', {useNewUrlParser: true})
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
